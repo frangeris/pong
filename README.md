@@ -1,3 +1,5 @@
+![logo](boilerplate-logo.svg)
+
 # Serverless RESTful Boilerplate (microservices pattern)
 
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
