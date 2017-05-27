@@ -15,9 +15,9 @@ This boilerplate want's to simplify the process of RESTful apis creations under 
 Clone the project from GitHub and install dependencies:
 
 ```sh
-$ npm install -g serverless
 $ git clone https://github.com/frangeris/serverless-boilerplate.git
 $ cd serverless-boilerplate
+$ npm install -g serverless
 $ npm install
 ```
 
@@ -33,7 +33,7 @@ The basic project contains the following directory structure:
 ├── README.md
 ├── package.json
 ├── .gitignore
-├── env.yml.example
+├── .env.yml.example
 ├── templates
 │   ├── request.vtl
 |   └── response.vtl
@@ -63,15 +63,15 @@ The default provider is `aws`, see [documentation](https://serverless.com/framew
 
 #### Stages
 
-The default stage is "develop", for create a new on, use the package `serverless-aws-alias` and change the value in `serverless.yml` or pass it as `--option` when deployment.
+The default stage is "develop", for create a new one, use the package `serverless-aws-alias` and change the value in `serverless.yml` or pass it as `--option` when deployment.
 
-#### env.yml.example
-Environment variables used by your function, variables are grouped by stage, so this meas variables will only be available depending of the stage where you defined them, variables are loaded automatically, there is not need to "require a file early as possible", so copy the file `env.yml.example` to `env.yml` and write the real values, depending the value for `stage` in `serverless.yml` file, values will be loaded, eg: 
+#### .env.yml.example
+Environment variables used by your function, variables are grouped by stage, so this meas variables will only be available depending of the stage where you defined them, variables are loaded automatically, there is not need to "require a file early as possible", so copy the file `.env.yml.example` to `.env.yml` and write the real values, depending the value for `stage` in `serverless.yml` file, values will be loaded, eg: 
 
 Create your final env vars file
 
 ```sh
-$ cp env.yml.example env.yml
+$ cp .env.yml.example .env.yml
 ```
 
 Now add the values per stage
@@ -92,7 +92,7 @@ module.exports.handler = (event, context, callback) => {
 }
 ```
 
-`env.yml.example` is added to VCS for keep reference of the variables, not values. `env.yml` is not uploaded either aws when create the package or vcs.
+`.env.yml.example` is added to VCS for keep reference of the variables, not values. `.env.yml` is not uploaded either aws when create the package or vcs.
 
 #### templates
 Templates are optionals, used when the integration is `lambda`, this method is more complicated and involves a lot more configuration of the http event syntax, [more info](https://serverless.com/framework/docs/providers/aws/events/apigateway/#lambda-integration).
@@ -141,6 +141,13 @@ response('user logged', 200, body, headers)
 
 **For use them it's extremely required add this code at the very begining of the handler**, the reason is that `response` helper use the lambda `callback` function for finish the execution of the lambda and is not cool send it by parameter...
 
+```javascript
+module.exports.handler = (event, context, callback) => {
+
+    // needed for response scope
+    global.cb = callback
+```
+
 The other issue is related to request body, from [Serverless docs](https://serverless.com/framework/docs/providers/aws/events/apigateway/#simple-http-endpoint) and [AWS Developer Guide](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-input-format):
 
 Note: When the body is a JSON-Document, you must parse it yourself
@@ -149,13 +156,13 @@ Note: When the body is a JSON-Document, you must parse it yourself
 {
     "resource": "Resource path",
     "path": "Path parameter",
-    "httpMethod": "Incoming request's method name"
-    "headers": {Incoming request headers}
-    "queryStringParameters": {query string parameters }
-    "pathParameters":  {path parameters}
-    "stageVariables": {Applicable stage variables}
-    "requestContext": {Request context, including authorizer-returned key-value pairs}
-    "body": "A JSON string of the request payload."
+    "httpMethod": "Incoming request's method name",
+    "headers": {},
+    "queryStringParameters": {},
+    "pathParameters":  {},
+    "stageVariables": {},
+    "requestContext": {},
+    "body": "A JSON STRING OF THE REQUEST PAYLOAD.",
     "isBase64Encoded": "A boolean flag to indicate if the applicable request payload is Base64-encode"
 }
 ```
@@ -174,7 +181,7 @@ module.exports.handler = (event, context, callback) => {
     ...
 ```
 
-After adding the code bellow, just import the helper lib built-in
+After adding the code bellow, just import the helper lib built-in and that's it... ^_^
 
 ```javascript
 const { validate, resolver, response } = require('../../helpers')
