@@ -1,4 +1,7 @@
-![logo](https://cdn.rawgit.com/frangeris/serverless-boilerplate/master/boilerplate-logo.svg)
+<div align="center">
+    <img src="https://cdn.rawgit.com/frangeris/serverless-boilerplate/master/boilerplate-logo.svg"
+      alt="Serverless RESTful Boilerplate" width="500" />
+</div>
 
 # Serverless RESTful Boilerplate (microservices pattern)
 
