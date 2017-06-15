@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Frangeris Peguero",
+      "authorEmail": "frangeris.20@gmail.com",
+      "authorUrl": "laberapps.com"
+    }
+  }
+}
