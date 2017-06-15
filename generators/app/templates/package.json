@@ -2,7 +2,6 @@
   "name": "serverless-boilerplate",
   "version": "0.0.1",
   "description": "Serverless boilerplate for RESTful api creation",
-  "private": true,
   "dependencies": {
     "asyncawait": "^1.0.6",
     "options-resolver": "^1.0.1"
