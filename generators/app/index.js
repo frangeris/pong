@@ -2,6 +2,13 @@
 const Generator = require('yeoman-generator');
 var path = require('path');
 var mkdirp = require('mkdirp');
+const _ = require('lodash');
+
+function makeProjectName(name) {
+  name = _.kebabCase(name);
+  name = name.indexOf('api') === -1 ? name + '-api' : name;
+  return name;
+}
 
 module.exports = class extends Generator {
   initializing() {
@@ -24,12 +31,20 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'name',
-        message: 'Your project name'
+        message: 'Your project name',
+        default: makeProjectName(path.basename(process.cwd())),
+        filter: makeProjectName
       },
       {
         type: 'input',
         name: 'description',
         message: 'Your project description'
+      },
+      {
+        type: 'input',
+        name: 'region',
+        default: 'us-west-1',
+        message: 'AWS API Gateway region'
       }
     ]).then(answers => {
       this.props = answers;
