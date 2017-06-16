@@ -1,8 +1,12 @@
 'use strict';
+const { response } = require('../../helpers')
 
 module.exports.handler = (event, context, callback) => {
 
-  console.log('DELETE http method')
+  global.cb = callback
 
-  callback(null);
+  // see logs in AWS Cloudwatch
+  console.log('delete http method')
+
+  response('hello from dummy delete')
 };

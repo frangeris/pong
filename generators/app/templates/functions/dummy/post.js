@@ -1,12 +1,11 @@
 'use strict';
-
 const { validate, resolver, response } = require('../../helpers')
 
 module.exports.handler = (event, context, callback) => {
 
 	// needed for response scope
 	global.cb = callback
-	let body = JSON.parse(event.body)	
+	let body = JSON.parse(event.body)
 
 	// field validations
 	resolver.setRequired([

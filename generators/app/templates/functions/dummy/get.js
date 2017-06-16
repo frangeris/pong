@@ -1,8 +1,12 @@
 'use strict';
+const { response } = require('../../helpers')
 
 module.exports.handler = (event, context, callback) => {
 
-  console.log('GET http method')
+  global.cb = callback
 
-  callback(null);
+  // see logs in AWS Cloudwatch
+  console.log('get http method')
+
+  response('hello from dummy get')
 };

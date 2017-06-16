@@ -8,6 +8,10 @@ let validate = async ((event) => {
     await (resolver.resolve(event))
 })
 
+let hello = () => {
+  console.log('works')
+}
+
 let response = (message = 'Request processed successfully', statusCode = undefined, body = {}, headers = {}) => {
 
     // @TODO: add support for return awsRequestId
