@@ -1,36 +1,65 @@
 'use strict';
 const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const yosay = require('yosay');
+var path = require('path');
+var mkdirp = require('mkdirp');
 
 module.exports = class extends Generator {
+  initializing() {
+    this.props = {};
+  }
+
+  defaults() {
+    if (path.basename(this.destinationPath()) !== this.props.name) {
+      this.log(
+        'Your generator must be inside a folder named ' + this.props.name + '\n' +
+        'I\'ll automatically create this folder.'
+      );
+      mkdirp(this.props.name);
+      this.destinationRoot(this.destinationPath(this.props.name));
+    }
+  }
+
   prompting() {
-    // Have Yeoman greet the user.
-    this.log(yosay(
-      'Welcome to the epic ' + chalk.red('generator-serverless-boilerplate') + ' generator!'
-    ));
-
-    const prompts = [{
-      type: 'confirm',
-      name: 'someAnswer',
-      message: 'Would you like to enable this option?',
-      default: true
-    }];
-
-    return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
-      this.props = props;
+    return this.prompt([
+      {
+        type: 'input',
+        name: 'name',
+        message: 'Your project name'
+      },
+      {
+        type: 'input',
+        name: 'description',
+        message: 'Your project description'
+      }
+    ]).then(answers => {
+      this.props = answers;
     });
   }
 
   writing() {
+    // Copy normal files
+    this.fs.copyTpl(
+      this.templatePath(),
+      this.destinationPath(),
+      this.props
+    );
+
+    // Hidden files
     this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
+       this.templatePath('.*'),
+       this.destinationPath()
+    );
+
+    this.fs.copy(
+       this.templatePath('.env.yml.example'),
+       this.destinationPath('.env.yml')
     );
   }
 
   install() {
-    this.installDependencies();
+    this.installDependencies({
+      npm: true,
+      bower: false
+    });
   }
 };

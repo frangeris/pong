@@ -1,7 +1,8 @@
 {
-  "name": "serverless-boilerplate",
+  "name": "<%= name %>",
   "version": "0.0.1",
-  "description": "Serverless boilerplate for RESTful api creation",
+  "description": "<%= description %>",
+  "license": "MIT",
   "dependencies": {
     "asyncawait": "^1.0.6",
     "options-resolver": "^1.0.1"
