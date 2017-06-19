@@ -2,15 +2,8 @@
 const Generator = require('yeoman-generator');
 const path = require('path');
 const mkdirp = require('mkdirp');
-const _ = require('lodash');
 const fs = require('fs');
-
-// Normalize the name of project
-function makeProjectName(name) {
-  name = _.kebabCase(name);
-  name = name.indexOf('api') === -1 ? name + '-api' : name;
-  return name;
-}
+const _ = require('lodash');
 
 module.exports = class extends Generator {
   initializing() {
@@ -27,8 +20,8 @@ module.exports = class extends Generator {
         type: 'input',
         name: 'name',
         message: 'Your project name',
-        default: makeProjectName(path.basename(process.cwd())),
-        filter: makeProjectName
+        default: _.kebabCase(path.basename(process.cwd() + '-api')),
+        filter: _.kebabCase
       },
       {
         type: 'input',
