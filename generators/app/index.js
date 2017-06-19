@@ -1,9 +1,11 @@
 'use strict';
 const Generator = require('yeoman-generator');
-var path = require('path');
-var mkdirp = require('mkdirp');
+const path = require('path');
+const mkdirp = require('mkdirp');
 const _ = require('lodash');
+const fs = require('fs');
 
+// Normalize the name of project
 function makeProjectName(name) {
   name = _.kebabCase(name);
   name = name.indexOf('api') === -1 ? name + '-api' : name;
@@ -13,6 +15,10 @@ function makeProjectName(name) {
 module.exports = class extends Generator {
   initializing() {
     this.props = {};
+    try {
+      fs.statSync(this.destinationPath('serverless.yml'));
+      this.log('Project detected, updating the core instead...');
+    } catch (ex) { }
   }
 
   prompting() {
@@ -27,6 +33,7 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'description',
+        default: 'Serverless Restful API',
         message: 'Your project description'
       },
       {
@@ -61,13 +68,14 @@ module.exports = class extends Generator {
 
     // Hidden files
     this.fs.copy(
-       this.templatePath('.*'),
-       this.destinationPath()
+      this.templatePath('.*'),
+      this.destinationPath()
     );
 
+    // Migrate .env vars
     this.fs.copy(
-       this.templatePath('.env.yml.example'),
-       this.destinationPath('.env.yml')
+      this.templatePath('.env.yml.example'),
+      this.destinationPath('.env.yml')
     );
   }
 
