@@ -6,7 +6,7 @@ module.exports.handler = (event, context, callback) => {
   global.cb = callback
 
   // see logs in AWS Cloudwatch
-  console.log('<%= name %> http method')
+  console.log('<%= name %> <%= method %> http method')
 
-  response('hello from <%= name %> get')
+  response('hello from <%= name %> function')
 };

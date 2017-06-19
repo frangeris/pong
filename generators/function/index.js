@@ -3,6 +3,7 @@ const Generator = require('yeoman-generator');
 const _ = require('lodash');
 const yaml = require('js-yaml');
 const fs = require('fs');
+const mkdirp = require('mkdirp');
 
 module.exports = class extends Generator {
   initializing() {
@@ -11,7 +12,7 @@ module.exports = class extends Generator {
       fs.statSync(this.destinationPath('serverless.yml'));
     } catch (ex) {
       // Stop, not project found
-      this.log.error('Could not open serverless.yml for overwrite.');
+      this.log.error('Could not open serverless.yml for overwrite, go inside a project.');
       process.exit();
     }
   }
@@ -48,16 +49,18 @@ module.exports = class extends Generator {
 
   writing() {
     // Append conf to .yml
+    let name = _.toLower(`${this.props.method}-${this.props.name}`);
+    let method = _.toLower(this.props.method);
+    let folder = `functions/${this.props.name}`;
     try {
       // Build the configuration file
       let serverless = yaml.safeLoad(fs.readFileSync(this.destinationPath('serverless.yml'), 'utf8'));
-      let name = _.toLower(`${this.props.method}-${this.props.name}`);
       serverless.functions[name] = {
         name,
         description: this.props.description,
-        handler: `functions/${this.props.name}/${_.toLower(this.props.method)}.handler`,
+        handler: `${folder}/${method}.handler`,
         events: {
-          http: `${this.props.method} ${this.props.name}`
+          http: `${_.toUpper(method)} ${this.props.name}`
         }
       };
 
@@ -69,5 +72,13 @@ module.exports = class extends Generator {
     } catch (ex) {
       this.log.error('Could not read/write serverless.yml file.');
     }
+
+    // Create function handler
+    mkdirp(folder);
+    this.fs.copyTpl(
+      this.templatePath('handler.js'),
+      this.destinationPath(`${folder}/${method}.js`),
+      {name, method}
+    );
   }
 };
