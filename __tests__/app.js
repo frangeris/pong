@@ -1,17 +1,27 @@
 'use strict';
-var path = require('path');
-var assert = require('yeoman-assert');
-var helpers = require('yeoman-test');
+const path = require('path');
+const assert = require('yeoman-assert');
+const helpers = require('yeoman-test');
 
-describe('generator-serverless-boilerplate:app', () => {
-  beforeAll(() => {
-    return helpers.run(path.join(__dirname, '../generators/app'))
-      .withPrompts({someAnswer: true});
+describe('serverless-boilerplate:app', () => {
+  beforeEach(() => {
+    return helpers.run(path.join(__dirname, '../generators/app'));
   });
 
-  it('creates files', () => {
+  // Validate structure
+  it('generate base files', () => {
     assert.file([
-      'dummyfile.txt'
+      'functions',
+      'helpers',
+      'templates',
+      'tests',
+      '.env.yml.example',
+      '.gitignore',
+      'boilerplate-logo.svg',
+      'LICENSE',
+      'package.json',
+      'README.md',
+      'serverless.yml'
     ]);
   });
 });

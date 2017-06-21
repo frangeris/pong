@@ -52,7 +52,7 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    // Copy normal files
+    // Copy normal files/folders
     this.fs.copyTpl(
       this.templatePath(),
       this.destinationPath(),

@@ -2,7 +2,7 @@
   "name": "<%= name %>",
   "version": "0.0.1",
   "description": "<%= description %>",
-  "license": "MIT",
+  "private": true,
   "dependencies": {
     "asyncawait": "^1.0.6",
     "options-resolver": "^1.0.1"
