@@ -6,12 +6,10 @@
 # Serverless RESTful Boilerplate (microservices pattern)
 
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
-[![npm](https://img.shields.io/npm/l/express.svg)](https://packagist.org/packages/frangeris/serverless-boilerplate)
-[![Build Status][travis-image]][travis-url]
+[![Build Status](https://travis-ci.org/frangeris/generator-serverless-boilerplate.svg?branch=master)](https://travis-ci.org/frangeris/generator-serverless-boilerplate)
 [![Dependency Status][daviddm-image]][daviddm-url]
+[![node](https://img.shields.io/badge/node-6.10-green.svg)](https://packagist.org/packages/frangeris/serverless-boilerplate)
 
-[travis-image]: https://travis-ci.org/frangeris/generator-serverless-boilerplate.svg?branch=master
-[travis-url]: https://travis-ci.org/frangeris/generator-serverless-boilerplate
 [daviddm-image]: https://david-dm.org/frangeris/generator-serverless-boilerplate.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/frangeris/generator-serverless-boilerplate
 
