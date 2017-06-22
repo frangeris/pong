@@ -17,7 +17,6 @@ describe('serverless-boilerplate:app', () => {
       'tests',
       '.env.yml.example',
       '.gitignore',
-      'boilerplate-logo.svg',
       'LICENSE',
       'package.json',
       'README.md',
