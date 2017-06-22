@@ -8,13 +8,10 @@ const mkdirp = require('mkdirp');
 module.exports = class extends Generator {
   initializing() {
     this.props = {};
-
     try {
       fs.statSync(this.destinationPath('serverless.yml'));
     } catch (ex) {
-      // Stop, not project found
-      this.log.error('Could not open serverless.yml for overwrite, go inside a project.');
-      this.async();
+      this.log.error('serverless.yml NOT FOUND, for overwrite go inside a project.');
     }
   }
 
