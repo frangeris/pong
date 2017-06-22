@@ -6,12 +6,12 @@
 # Serverless RESTful Boilerplate (microservices pattern)
 
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
-[![Build Status](https://travis-ci.org/frangeris/generator-serverless-boilerplate.svg?branch=master)](https://travis-ci.org/frangeris/generator-serverless-boilerplate)
+[![Build Status](https://travis-ci.org/frangeris/serverless-boilerplate.svg?branch=master)](https://travis-ci.org/frangeris/serverless-boilerplate)
 [![Dependency Status][daviddm-image]][daviddm-url]
 [![node](https://img.shields.io/badge/node-6.10-green.svg)](https://packagist.org/packages/frangeris/serverless-boilerplate)
 
-[daviddm-image]: https://david-dm.org/frangeris/generator-serverless-boilerplate.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/frangeris/generator-serverless-boilerplate
+[daviddm-image]: https://david-dm.org/frangeris/serverless-boilerplate.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/frangeris/serverless-boilerplate
 
 This boilerplate want's to simplify the process of RESTful apis creations under serverless arquitecture in AWS (serverless +v1.x), create a good codebase with scalability while the project grow up could require a lot of efford, time and dedication for know how the framework works, often this process of learning tends to be while we're building the product and this require agility and fast learning, customizing the code could be annoying a take more time than expected, that's the reason of this skeleton. 
 
