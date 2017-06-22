@@ -32,6 +32,12 @@ Then generate your new project:
 yo serverless-boilerplate
 ```
 
+To generate new functions inside a project (recomended for overwrite `serverless.yml`):
+
+```bash
+yo serverless-boilerplate:function
+```
+
 ## Now, let's Rock n' roll
 The project structure presented in this boilerplate is Microservices Pattern, where functionality is grouped primarily by function rather than resources. Each job or functionality is isolated within a separate Lambda function.
 
