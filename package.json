@@ -1,8 +1,8 @@
 {
   "name": "generator-serverless-boilerplate",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Serverless boilerplate for RESTful api creation",
-  "homepage": "",
+  "license": "MIT",
   "author": {
     "name": "Frangeris Peguero",
     "email": "frangeris.20@gmail.com"
@@ -51,6 +51,5 @@
       "node": true
     }
   },
-  "repository": "frangeris/serverless-boilerplate",
-  "license": "MIT"
+  "repository": "frangeris/serverless-boilerplate"
 }
