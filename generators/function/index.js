@@ -59,7 +59,15 @@ module.exports = class extends Generator {
         handler: `${folder}/${method}.handler`,
         events: [
           {
-            http: `${_.toUpper(method)} ${this.props.name}`
+            http: {
+              method: _.toUpper(method),
+              path: this.props.name,
+              integration: 'lambda',
+              request: {
+                // eslint-disable-next-line
+                template: '${file("templates/request.vtl")}'
+              }
+            }
           }
         ]
       };
