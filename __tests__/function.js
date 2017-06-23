@@ -3,7 +3,6 @@ const path = require('path');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
-// "pretest": "eslint . --fix",
 describe('serverless-boilerplate:function', () => {
   beforeEach(done => {
     helpers
@@ -21,8 +20,6 @@ describe('serverless-boilerplate:function', () => {
   });
 
   it('generate GET method', () => {
-    assert.file([
-      'functions/users/get.js'
-    ]);
+    assert.file('functions/users/get.js');
   });
 });

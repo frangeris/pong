@@ -57,9 +57,11 @@ module.exports = class extends Generator {
         name,
         description: this.props.description,
         handler: `${folder}/${method}.handler`,
-        events: {
-          http: `${_.toUpper(method)} ${this.props.name}`
-        }
+        events: [
+          {
+            http: `${_.toUpper(method)} ${this.props.name}`
+          }
+        ]
       };
 
       fs.writeFile(
