@@ -97,7 +97,7 @@ module.exports = class extends Generator {
             http: {
               method: _.toUpper(this.props.method),
               path: this.props.name,
-              integration: 'lambda',
+              integration: 'lambda-proxy',
               request: {
                 template: {
                   // eslint-disable-next-line
