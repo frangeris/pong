@@ -1,6 +1,6 @@
 {
   "name": "generator-serverless-boilerplate",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Serverless boilerplate for RESTful api creation",
   "license": "MIT",
   "author": {
