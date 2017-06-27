@@ -99,8 +99,10 @@ module.exports = class extends Generator {
               path: this.props.name,
               integration: 'lambda',
               request: {
-                // eslint-disable-next-line
-                template: '${file("templates/request.vtl")}'
+                template: {
+                  // eslint-disable-next-line
+                  'application/json': '${file("templates/request.vtl")}'
+                }
               }
             }
           }
