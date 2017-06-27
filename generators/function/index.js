@@ -101,7 +101,7 @@ module.exports = class extends Generator {
               request: {
                 template: {
                   // eslint-disable-next-line
-                  'application/json': '${file("templates/request.vtl")}'
+                  'application/json': '${file(templates/request.vtl)}'
                 }
               }
             }
