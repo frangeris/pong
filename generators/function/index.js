@@ -120,7 +120,7 @@ module.exports = class extends Generator {
     mkdirp(dest);
     this.fs.copyTpl(
       this.templatePath('handler.js'),
-      this.destinationPath(`${dest}/${func}.js`),
+      this.destinationPath(`${dest}/${this.props.method}.js`),
       {
         name,
         method: func
