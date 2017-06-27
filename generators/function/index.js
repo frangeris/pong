@@ -88,7 +88,7 @@ module.exports = class extends Generator {
       }
       handler += `${dest}/${this.props.method}.handler`;
       let serverless = yaml.safeLoad(fs.readFileSync(this.configFile, 'utf8'));
-      serverless.functions[name] = {
+      serverless.functions[`${serverless.service}-${name}`] = {
         name,
         description: this.props.description,
         handler,
