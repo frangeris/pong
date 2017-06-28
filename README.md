@@ -78,7 +78,7 @@ To update a project with the latest features in the boilerplate just run `yo ser
 dev @ ~/code/my-api
 $ yo serverless-boilerplate
 Project detected, updating the core instead...
-? Your project name (plavicon-api-api)
+? Your project name (my-api)
 ```
 *Note:* it will ask for some fields in case you want to update basic parameters in `serverless.yml`, in case nothing change, hit enter to use existing previous values.
 
