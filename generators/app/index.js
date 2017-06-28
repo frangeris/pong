@@ -35,7 +35,7 @@ module.exports = class extends Generator {
         name: 'description',
         default: answers => {
           if (this.serverless) {
-            return this.serverless.service;
+            return this.serverless.description;
           }
           return `${answers.name} Restful API`;
         },
