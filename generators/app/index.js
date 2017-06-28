@@ -9,6 +9,7 @@ const yaml = require('js-yaml');
 module.exports = class extends Generator {
   initializing() {
     this.serverless = null;
+    this.parentName = path.basename(process.cwd());
     this.props = {};
     try {
       this.serverless = yaml.safeLoad(fs.readFileSync(this.destinationPath('serverless.yml'), 'utf8'));
@@ -26,18 +27,18 @@ module.exports = class extends Generator {
           if (this.serverless) {
             return this.serverless.service;
           }
-          return _.kebabCase(path.basename(process.cwd() + '-api'));
+          return _.kebabCase(this.parentName + '-api');
         },
         filter: _.kebabCase
       },
       {
         type: 'input',
         name: 'description',
-        default: answers => {
-          if (this.serverless) {
-            return this.serverless.description;
-          }
-          return `${answers.name} Restful API`;
+        when: () => {
+          return !this.serverless;
+        },
+        default: () => {
+          return `${_.capitalize(this.parentName)} Restful API`;
         },
         message: 'Your project description'
       },
