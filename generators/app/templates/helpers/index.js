@@ -8,6 +8,7 @@ let validate = __async__((event) => {
   __await__(resolver.resolve(event))
 })
 
+// @depretated: use response.js helper instead
 let response = (message = 'Request processed successfully', statusCode = undefined, body = {}, headers = {}) => {
 
   // @TODO: add support for return awsRequestId
