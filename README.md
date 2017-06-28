@@ -92,6 +92,7 @@ The basic project contains the following directory structure:
 .
 ├── serverless.yml
 ├── README.md
+├── LICENSE
 ├── package.json
 ├── .gitignore
 ├── .env.yml.example
@@ -99,9 +100,10 @@ The basic project contains the following directory structure:
 │   ├── request.vtl
 |   └── response.vtl
 ├── helpers
-│   └── index.js
+│   ├── index.js
+│   └── response.js
 ├── functions
-│   └── my-resource
+│   └── dummy
 │       ├── event.json
 │       ├── get.js
 │       ├── post.js
