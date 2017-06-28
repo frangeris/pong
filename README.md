@@ -67,6 +67,21 @@ drwxr-xr-x 2 dev 4,0K jun 27 10:41 orgs
 ```
 *[WIP]* Currently the `function` subgenerator don't save the path with parameters, so *parameters* must be added manually.
 
+## How apply updates?
+Thank's to [Yeoman](http://yeoman.io) :raised_hands: we have a [conflict handler](http://yeoman.io/generator/Conflicter.html) out-of-the-box.
+
+> The Conflicter is a module that can be used to detect conflict between files. Each Generator file system helpers pass files through this module to make sure they don't break a user file.
+
+To update a project with the latest features in the boilerplate just run `yo serverless-boilerplate` inside the project, the generator must detect and automatically inform that an update will be made.
+
+```bash
+dev @ ~/code/my-api
+$ yo serverless-boilerplate
+Project detected, updating the core instead...
+? Your project name (plavicon-api-api)
+```
+*Note:* it will ask for some fields in case you want to update basic parameters in `serverless.yml`, in case nothing change, hit enter to use existing previous values.
+
 ## Now, let's Rock n' roll
 The project structure presented in this boilerplate is Microservices Pattern, where functionality is grouped primarily by function rather than resources. Each job or functionality is isolated within a separate Lambda function.
 

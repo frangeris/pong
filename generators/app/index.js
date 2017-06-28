@@ -4,14 +4,16 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const _ = require('lodash');
+const yaml = require('js-yaml');
 
 module.exports = class extends Generator {
   initializing() {
+    this.serverless = null;
     this.props = {};
     try {
-      fs.statSync(this.destinationPath('serverless.yml'));
+      this.serverless = yaml.safeLoad(fs.readFileSync(this.destinationPath('serverless.yml'), 'utf8'));
       this.log('Project detected, updating the core instead...');
-    } catch (ex) { }
+    } catch (ex) {}
   }
 
   prompting() {
@@ -20,19 +22,34 @@ module.exports = class extends Generator {
         type: 'input',
         name: 'name',
         message: 'Your project name',
-        default: _.kebabCase(path.basename(process.cwd() + '-api')),
+        default: () => {
+          if (this.serverless) {
+            return this.serverless.service;
+          }
+          return _.kebabCase(path.basename(process.cwd() + '-api'));
+        },
         filter: _.kebabCase
       },
       {
         type: 'input',
         name: 'description',
-        default: 'Serverless Restful API',
+        default: answers => {
+          if (this.serverless) {
+            return this.serverless.service;
+          }
+          return `${answers.name} Restful API`;
+        },
         message: 'Your project description'
       },
       {
         type: 'input',
         name: 'region',
-        default: 'us-west-1',
+        default: () => {
+          if (this.serverless) {
+            return this.serverless.provider.region;
+          }
+          return 'us-west-1';
+        },
         message: 'AWS API Gateway region'
       }
     ]).then(answers => {
@@ -41,7 +58,8 @@ module.exports = class extends Generator {
   }
 
   defaults() {
-    if (path.basename(this.destinationPath()) !== this.props.name) {
+    // Create new folder if not updating
+    if (!this.serverless && path.basename(this.destinationPath()) !== this.props.name) {
       this.log(
         'Your generator must be inside a folder named ' + this.props.name + '\n' +
         'I\'ll automatically create this folder.'
