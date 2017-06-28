@@ -65,7 +65,7 @@ drwxr-xr-x 4 dev 4,0K jun 27 10:36 ..
 -rw-r--r-- 1 dev  266 jun 27 10:36 get.js
 drwxr-xr-x 2 dev 4,0K jun 27 10:41 orgs
 ```
-*[WIP]* Currently the `function` subgenerator don't save the path with parameters, so *parameters* must be added manually.
+**[WIP]** Currently the `function` subgenerator don't save the path with parameters, so *parameters* must be added manually.
 
 ## How apply updates?
 Thank's to [Yeoman](http://yeoman.io) :raised_hands: we have a [conflict handler](http://yeoman.io/generator/Conflicter.html) out-of-the-box.
@@ -167,9 +167,11 @@ Helpers are just custom reusable functions for facilitate some repetitive tasks 
 
 Here the current availables:
 - `validate()` this method return a `Promise` and throw an `Error` if the validation fails.
-- `response()` is a shorcut for the callback received in the lambda handler, but this add the json body for integration response in API Gateway at the same time, eg:
+- `response()` **@deprecated**, use `'/helpers/response'` instead, is a shorcut for the callback received in the lambda handler, but this add the json body for integration response in API Gateway at the same time, eg:
 
 ```javascript
+const { response, resolver, validate } = require('path/to/helpers')
+
 // success response
 response() // 200 - {"message": "Request processed successfully"}
 response('this works like a charm!') // 200 - {"message": "this works like a charm!"}
@@ -199,6 +201,31 @@ let body = {
 response('user logged', 200, body, headers)
 
 ```
+
+There's a new version final version of `response()`, the main differences between using `response()` from `require('helpers')` and `require('helpers/response')` is that the new one implement [JSON API](http://jsonapi.org) standard.
+
+> Using response from `require('helpers')` will be deprecated in the next major release.
+
+Samples of the new `response` **using lambda-proxy integration**, [more info of integrations](https://serverless.com/framework/docs/providers/aws/events/apigateway/#request-templates).
+```javascript
+const response = require('path/to/helpers/response')
+response(201)
+// {"statusCode": 201, "body": "{\"data\":null}","headers": {}}
+
+response(403, new Error('my custom error message'))
+// {"statusCode": 403, "body": "{\"error\":{\"title\":\"my custom error message\",\"meta\":{}}}", "headers":{}}
+
+response(501, {key: 'value'})
+//{"statusCode": 501, "body": "{\"data\":{\"key\":\"value\"}}", "headers": {}}
+ 
+response(403)
+// {"statusCode": 403, "body": "{\"data\":null}", "headers": {}}
+
+response()
+// Error - Invalid arguments supplied for response
+```
+
+> **[WIP]** Customization of header using the new response is not supported for now...
 
 - `resolver` just an `object` to interact with [krachot/options-resolver](https://github.com/krachot/options-resolver)
 
@@ -286,4 +313,4 @@ npm install
 ```
 
 ## License
-This boilerplate is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT) © [Frangeris Peguero](github.com/frangeris)
+This boilerplate is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT) © [Frangeris Peguero](http://github.com/frangeris)
