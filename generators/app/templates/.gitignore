@@ -7,4 +7,5 @@ jspm_packages
 
 # project
 .env.yml
-functions/dummy/
+functions/example/
+jwks.pem

@@ -15,33 +15,36 @@ package:
     - .env.yml.example
     - templates/**
 functions:
-  get-dummy:
-    name: get-dummy
-    description: Get dummy method description
-    handler: functions/dummy/get.handler
+  authorizer-jwt:
+    handler: functions/authorizer-jwt/handler.handler
+  get-example:
+    name: get-example
+    description: Get example method description
+    handler: functions/example/get.handler
     events:
       - http:
           method: GET
-          path: dummy
+          path: example
           cors: true
-  post-dummy:
-    name: post-dummy
-    description: Post dummy method description
-    handler: functions/dummy/post.handler
+          authorizer: authorizer-jwt
+  post-example:
+    name: post-example
+    description: Post example method description
+    handler: functions/example/post.handler
     events:
-      - http: POST dummy
-  put-dummy:
-    name: put-dummy
-    description: Put dummy method description
-    handler: functions/dummy/put.handler
+      - http: POST example
+  put-example:
+    name: put-example
+    description: Put example method description
+    handler: functions/example/put.handler
     events:
-      - http: PUT dummy
-  delete-dummy:
-    name: delete-dummy
-    description: Delete dummy method description
-    handler: functions/dummy/delete.handler
+      - http: PUT example
+  delete-example:
+    name: delete-example
+    description: Delete example method description
+    handler: functions/example/delete.handler
     events:
-      - http: DELETE dummy
+      - http: DELETE example
 resources:
   Resources:
     ApiGatewayRestApi:
