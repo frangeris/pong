@@ -10,6 +10,7 @@ module.exports = class extends Generator {
   initializing() {
     this.serverless = null;
     this.parentName = path.basename(process.cwd());
+    this.description = `${_.capitalize(this.parentName)} serverless api`;
     this.props = {};
     try {
       this.serverless = yaml.safeLoad(fs.readFileSync(this.destinationPath('serverless.yml'), 'utf8'));
@@ -38,7 +39,7 @@ module.exports = class extends Generator {
           return !this.serverless;
         },
         default: () => {
-          return `${_.capitalize(this.parentName)} Restful API`;
+          return this.description;
         },
         message: 'Your project description'
       },
@@ -71,6 +72,9 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    // When updating core, use default value
+    this.props.description = this.props.description || this.description;
+
     // Copy normal files/folders
     this.fs.copyTpl(
       this.templatePath(),
