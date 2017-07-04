@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
-const request = require('request')
-const jwkToPem = require('jwk-to-pem')
 const AuthPolicy = require('./authpolicy')
+const response = require('../helpers/response')
 
 exports.handler = function (event, context) {
   let pems = require('./jwks.pem')
@@ -10,38 +9,30 @@ exports.handler = function (event, context) {
   // fail if the token is not jwt
   let decodedJwt = jwt.decode(token, { complete: true });
   if (!decodedJwt) {
-    console.log("Not a valid JWT token");
-    context.fail("Unauthorized");
-    return;
+    response(401)
   }
 
   // fail if token is not from your UserPool
   if (decodedJwt.payload.iss != iss) {
-    console.log("invalid issuer");
-    context.fail("Unauthorized");
-    return;
+    response(401)
   }
 
   // reject the jwt if it's not an 'Access Token'
   if (decodedJwt.payload.token_use != 'access') {
-    console.log("Not an access token");
-    context.fail("Unauthorized");
-    return;
+    response(401)
   }
 
   // get the kid from the token and retrieve corresponding PEM
   let kid = decodedJwt.header.kid;
   let pem = pems[kid];
   if (!pem) {
-    console.log('Invalid access token');
-    context.fail("Unauthorized");
-    return;
+    response(401)
   }
 
   // verify the signature of the JWT token to ensure it's really coming from your User Pool
   jwt.verify(token, pem, { issuer: iss }, function (err, payload) {
     if (err) {
-      context.fail("Unauthorized");
+      response(401)
     } else {
       // valid token. Generate the API Gateway policy for the user
       // always generate the policy on value of 'sub' claim and not for 'username' because username is reassignable

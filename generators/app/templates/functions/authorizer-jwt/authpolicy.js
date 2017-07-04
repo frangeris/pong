@@ -18,7 +18,7 @@
  * @class AuthPolicy
  * @constructor
  */
-module.exports = function (principal, awsAccountId, apiOptions) {
+function AuthPolicy (principal, awsAccountId, apiOptions) {
   /**
    * The AWS account id the policy will be generated for. This is used to create
    * the method ARNs.
@@ -312,3 +312,5 @@ AuthPolicy.prototype = (function () {
     }
   };
 })();
+
+module.exports = AuthPolicy

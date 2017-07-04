@@ -17,6 +17,7 @@ package:
 functions:
   authorizer-jwt:
     handler: functions/authorizer-jwt/handler.handler
+    description: Authorizer for JWT integration
   get-example:
     name: get-example
     description: Get example method description
