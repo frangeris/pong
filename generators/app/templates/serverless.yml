@@ -6,7 +6,7 @@ provider:
   stage: develop
   environment: '${file(.env.yml):${self:custom.stage}}'
 custom:
-  stage: "${opt:stage, self:provider.stage}"
+  stage: '${opt:stage, self:provider.stage}'
 package:
   exclude:
     - .vscode/**

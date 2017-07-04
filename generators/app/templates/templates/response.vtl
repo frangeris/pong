@@ -1,4 +1,4 @@
-##  See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+## See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
 #set($raw = $util.parseJson($input.path('$.errorMessage')))
 {
   "message": "$raw.httpMessage",
