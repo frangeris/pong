@@ -9,30 +9,30 @@ exports.handler = function (event, context) {
   // fail if the token is not jwt
   let decodedJwt = jwt.decode(token, { complete: true });
   if (!decodedJwt) {
-    response(401)
+    callback('Unauthorized');
   }
 
   // fail if token is not from your UserPool
   if (decodedJwt.payload.iss != iss) {
-    response(401)
+    callback('Unauthorized');
   }
 
   // reject the jwt if it's not an 'Access Token'
   if (decodedJwt.payload.token_use != 'access') {
-    response(401)
+    callback('Unauthorized');
   }
 
   // get the kid from the token and retrieve corresponding PEM
   let kid = decodedJwt.header.kid;
   let pem = pems[kid];
   if (!pem) {
-    response(401)
+    callback('Unauthorized');
   }
 
   // verify the signature of the JWT token to ensure it's really coming from your User Pool
   jwt.verify(token, pem, { issuer: iss }, function (err, payload) {
     if (err) {
-      response(401)
+      callback('Unauthorized');
     } else {
       // valid token. Generate the API Gateway policy for the user
       // always generate the policy on value of 'sub' claim and not for 'username' because username is reassignable
