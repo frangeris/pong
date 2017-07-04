@@ -8,12 +8,15 @@ provider:
 custom:
   stage: "${opt:stage, self:provider.stage}"
 package:
-  include:
-    - node_modules/**
   exclude:
+    - .vscode/**
+    - docs/**
+    - templates/**
+    - tests/**
+    - .editorconfig
     - .env.yml
     - .env.yml.example
-    - templates/**
+    - .eslintrc.js
 functions:
   authorizer-jwt:
     handler: functions/authorizer-jwt/handler.handler
