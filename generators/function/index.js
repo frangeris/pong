@@ -9,6 +9,8 @@ const glob = require('glob');
 
 module.exports = class extends Generator {
   initializing() {
+    this.option('enable-cors');
+
     this.currentDir = path.basename(process.cwd());
     this.props = {};
 
@@ -88,23 +90,30 @@ module.exports = class extends Generator {
       }
       handler += `${dest}/${this.props.method}.handler`;
       let serverless = yaml.safeLoad(fs.readFileSync(this.configFile, 'utf8'));
+      let http = {
+        method: _.toUpper(this.props.method),
+        path: this.props.name,
+        integration: 'lambda-proxy',
+        request: {
+          template: {
+            // eslint-disable-next-line
+            'application/json': '${file(templates/request.vtl)}'
+          }
+        }
+      };
+
+      // If enable-cors
+      if (this.options.enableCors) {
+        http.cors = true;
+      }
+
       serverless.functions[name] = {
         name: `${serverless.service}-${name}`,
         description: this.props.description,
         handler,
         events: [
           {
-            http: {
-              method: _.toUpper(this.props.method),
-              path: this.props.name,
-              integration: 'lambda-proxy',
-              request: {
-                template: {
-                  // eslint-disable-next-line
-                  'application/json': '${file(templates/request.vtl)}'
-                }
-              }
-            }
+            http
           }
         ]
       };

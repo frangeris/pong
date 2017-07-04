@@ -23,4 +23,8 @@ describe('serverless-boilerplate:function', () => {
   it('generate GET method', () => {
     assert.file('functions/users/get.js');
   });
+
+  // File serverless.yml do not exists
+  xit('generate a valid serverless.yml');
+  xit('must enable cors');
 });
