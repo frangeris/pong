@@ -1,6 +1,6 @@
 # <%= name %>
 
-> <%= description %>
+> <%= name %> serverless api.
 
 ## Build Setup
 

@@ -1,11 +1,12 @@
 {
   "name": "<%= name %>",
   "version": "0.0.1",
-  "description": "<%= description %>",
+  "description": "<%= name %> serverless api.",
   "private": true,
   "dependencies": {
     "asyncawait": "^1.0.6",
-    "options-resolver": "^1.0.1"
+    "options-resolver": "^1.0.1",
+    "jsonwebtoken": "^7.4.1"
   },
   "devDependencies": {
     "serverless-aws-alias": "^0.5.1-alpha1"
