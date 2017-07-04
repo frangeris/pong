@@ -11,13 +11,20 @@ module.exports = function () {
 
   // default values
   let statusCode = null
-  let headers = {}
+  let headers = {
+    // required for CORS using lambda-proxy
+    "Access-Control-Allow-Origin": "*",
+
+    // required for cookies, authorization headers with HTTPS
+    "Access-Control-Allow-Credentials": true
+  }
+
   let body = {
     data: null
   }
 
   // determinate the type of the args
-  for (arg of Array.from(arguments)) {
+  for (let arg of Array.from(arguments)) {
     switch (typeof (arg)) {
       case 'number':
         statusCode = arg
