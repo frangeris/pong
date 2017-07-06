@@ -208,7 +208,7 @@ There's a new version final version of `response()`, the main differences betwee
 
 > Using response from `require('helpers')` will be deprecated in the next major release.
 
-Samples of the new `response` **using lambda-proxy integration**, [more info of integrations](https://serverless.com/framework/docs/providers/aws/events/apigateway/#request-templates).
+Samples of the new `response` **using lambda-proxy integration**, [more info of integrations](https://serverless.com/framework/docs/providers/aws/events/apigateway).
 ```javascript
 const response = require('path/to/helpers/response')
 response(201)

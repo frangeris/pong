@@ -92,14 +92,7 @@ module.exports = class extends Generator {
       let serverless = yaml.safeLoad(fs.readFileSync(this.configFile, 'utf8'));
       let http = {
         method: _.toUpper(this.props.method),
-        path: this.props.name,
-        integration: 'lambda-proxy',
-        request: {
-          template: {
-            // eslint-disable-next-line
-            'application/json': '${file(templates/request.vtl)}'
-          }
-        }
+        path: this.props.name
       };
 
       // If enable-cors
