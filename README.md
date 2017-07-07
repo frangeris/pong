@@ -192,6 +192,19 @@ The authorizer needs to khow the `iss` of the [jwt](https://tools.ietf.org/html/
 develop:
   AWS_ISS: https://cognito-idp.{region}.amazonaws.com/{userPoolId}
 ```
+If the function needs to be secured using jwt authorizer, remember to add it inside the function template in `serverless.yml` file, eg like this:
+```yml
+  get-users-orgs:
+    name: test-api-get-users-orgs
+    description: Get users orgs
+    handler: functions/users/orgs/get.handler
+    events:
+      - http:
+          path: '/users/{sub}/orgs'
+          method: GET
+          cors: true
+          authorizer: authorizer-jwt
+```
 
 - `validate()` this method return a `Promise` and throw an `Error` if the validation fails.
 - `response()` **@deprecated**, use `'/helpers/response'` instead, is a shorcut for the callback received in the lambda handler, but this add the json body for integration response in API Gateway at the same time, eg:
