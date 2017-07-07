@@ -25,8 +25,8 @@ axios.get(url).then((response) => {
 
   // write the pem file
   fs.writeFile('../jwks-pem.json', JSON.stringify(pems), () => {
-    console.log('pem file successfully, check it out ../jwks-pem.json')
+    console.log('Nice, pem file created, check it out ../jwks-pem.json')
   })
 }).catch((err) => {
-  console.log(`Error downloading file: ${err}`)
+  console.log(`Ups, error downloading file: ${err}`)
 })
