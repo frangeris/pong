@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const AuthPolicy = require('./authpolicy')
 
 exports.handler = function (event, context, callback) {
-  let pems = require('../../jwks.pem')
+  let pems = require('../../jwks-pem.json')
   let token = event.authorizationToken
   let iss = process.env.AWS_ISS
 
