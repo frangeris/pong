@@ -44,4 +44,6 @@ describe('helpers', () => {
     expect(result).toHaveProperty('statusCode');
     expect(result.statusCode).toBe(400);
   });
+
+  xit('should generate a valid jwks-pem.json');
 });

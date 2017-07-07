@@ -9,6 +9,9 @@
     "jsonwebtoken": "^7.4.1"
   },
   "devDependencies": {
-    "serverless-aws-alias": "^0.5.1-alpha1"
+    "serverless-aws-alias": "^0.5.1-alpha1",
+    "jwk-to-pem": "^1.2.6",
+    "axios": "^0.16.2",
+    "fs": "0.0.1-security"
   }
 }
