@@ -4,6 +4,7 @@ const AuthPolicy = require('./authpolicy')
 exports.handler = function (event, context, callback) {
   let pems = require('../../jwks.pem')
   let token = event.authorizationToken
+  let iss = process.env.AWS_ISS
 
   // fail if the token is not jwt
   let decodedJwt = jwt.decode(token, { complete: true })

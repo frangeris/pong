@@ -187,6 +187,12 @@ $ node jwks-to-pem.js <url to jwks.json>
 
 This will generate a json file with the pem keys in it, `authorizer-jwt` use this file to authenticate using [JSON Web Tokens](https://jwt.io/) with [cognito integration](https://aws.amazon.com/blogs/mobile/integrating-amazon-cognito-user-pools-with-api-gateway/) for secure your resources, [more info](https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html).
 
+The authorizer needs to khow the `iss` of the [jwt](https://tools.ietf.org/html/rfc7519#section-4.1.1), so add the value to `env.yml` and replate the values of `region, userPoolId`, like this:
+```bash
+develop:
+  AWS_ISS: https://cognito-idp.{region}.amazonaws.com/{userPoolId}
+```
+
 - `validate()` this method return a `Promise` and throw an `Error` if the validation fails.
 - `response()` **@deprecated**, use `'/helpers/response'` instead, is a shorcut for the callback received in the lambda handler, but this add the json body for integration response in API Gateway at the same time, eg:
 
