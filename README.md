@@ -141,7 +141,7 @@ The default provider is `aws`, see [documentation](https://serverless.com/framew
 The default stage is "develop", for create a new one, use the package `serverless-aws-alias` and change the value in `serverless.yml` or pass it as `--option` when deployment.
 
 #### .env.yml.example
-Environment variables used by your function, variables are grouped by stage, so this meas variables will only be available depending of the stage where you defined them, variables are loaded automatically, there is not need to "require a file early as possible", so copy the file *IF NOT EXISTS* `.env.yml.example` to `.env.yml` and write the real values, depending the value for `stage` in `serverless.yml` file, values will be loaded, eg: 
+Environment variables used by your function, variables are grouped by stage, so this meas variables will only be available depending of the stage where you defined them, variables are loaded automatically, there is not need to "require a file early as possible", so copy the file **IF NOT EXISTS** `.env.yml.example` to `.env.yml` and write the real values, depending the value for `stage` in `serverless.yml` file, values will be loaded, eg: 
 
 Create your final env vars file
 
@@ -187,12 +187,12 @@ $ node jwks-to-pem.js <url to jwks.json>
 
 This will generate a json file with the pem keys in it, `authorizer-jwt` use this file to authenticate using [JSON Web Tokens](https://jwt.io/) with [cognito integration](https://aws.amazon.com/blogs/mobile/integrating-amazon-cognito-user-pools-with-api-gateway/) for secure your resources, [more info](https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-with-identity-providers.html).
 
-The authorizer needs to khow the `iss` of the [jwt](https://tools.ietf.org/html/rfc7519#section-4.1.1), so add the value to `env.yml` and replate the values of `region, userPoolId`, like this:
+The authorizer needs to khow the `iss` of the [token](https://tools.ietf.org/html/rfc7519#section-4.1.1), so add the value to `env.yml` and replace the values of `region, userPoolId`, like this:
 ```bash
 develop:
   AWS_ISS: https://cognito-idp.{region}.amazonaws.com/{userPoolId}
 ```
-If the function needs to be secured using jwt authorizer, remember to add it inside the function template in `serverless.yml` file, eg like this:
+**If a function needs to be secured using jwt authorizer**, remember to add it inside the function template in `serverless.yml` file, eg like this:
 ```yml
   get-users-orgs:
     name: test-api-get-users-orgs
@@ -205,6 +205,7 @@ If the function needs to be secured using jwt authorizer, remember to add it ins
           cors: true
           authorizer: authorizer-jwt
 ```
+And that's it, API Gateway will run the [authorizer before the lambda execution](https://aws.amazon.com/blogs/compute/introducing-custom-authorizers-in-amazon-api-gateway/) automatically :dancer:
 
 - `validate()` this method return a `Promise` and throw an `Error` if the validation fails.
 - `response()` **@deprecated**, use `'/helpers/response'` instead, is a shorcut for the callback received in the lambda handler, but this add the json body for integration response in API Gateway at the same time, eg:
