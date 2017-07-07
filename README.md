@@ -141,7 +141,7 @@ The default provider is `aws`, see [documentation](https://serverless.com/framew
 The default stage is "develop", for create a new one, use the package `serverless-aws-alias` and change the value in `serverless.yml` or pass it as `--option` when deployment.
 
 #### .env.yml.example
-Environment variables used by your function, variables are grouped by stage, so this meas variables will only be available depending of the stage where you defined them, variables are loaded automatically, there is not need to "require a file early as possible", so copy the file `.env.yml.example` to `.env.yml` and write the real values, depending the value for `stage` in `serverless.yml` file, values will be loaded, eg: 
+Environment variables used by your function, variables are grouped by stage, so this meas variables will only be available depending of the stage where you defined them, variables are loaded automatically, there is not need to "require a file early as possible", so copy the file *IF NOT EXISTS* `.env.yml.example` to `.env.yml` and write the real values, depending the value for `stage` in `serverless.yml` file, values will be loaded, eg: 
 
 Create your final env vars file
 
