@@ -8,4 +8,4 @@ module.exports.handler = (event, context, callback) => {
   console.log('<%= name %> <%= method %> http method')
 
   response(200)
-};
+}
