@@ -36,10 +36,22 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'name',
-        message: 'Function name',
+        message: 'Resource name',
         filter: _.kebabCase.toLower,
         validate: value => {
           return !_.isEmpty(value);
+        }
+      },
+      {
+        type: 'list',
+        name: 'nested',
+        message: 'What kind of design?',
+        choices: answers => {
+          return [
+            `Normal "/${answers.name}"`,
+            `By id "/${answers.name}/{id}"`,
+            `Nested "/${this.currentDir}/{id}/${answers.name}"`
+          ];
         }
       },
       {
@@ -48,12 +60,6 @@ module.exports = class extends Generator {
         message: 'Which HTTP method?',
         choices: ['GET', 'POST', 'PUT', 'DELETE'],
         filter: _.toLower
-      },
-      {
-        type: 'confirm',
-        name: 'nested',
-        message: 'Is it a nested resource?',
-        default: false
       },
       {
         type: 'input',
