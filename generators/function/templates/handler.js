@@ -2,7 +2,7 @@
 const response = require('<%= path %>/helpers/response')
 
 module.exports.handler = (event, context, callback) => {
-  global.cb = callback<% if (method.match(/POST|PUT/)) { %>
+  global.cb = callback<% if (method.match(/post|put/)) { %>
   let body = JSON.parse(event.body)<% } %>
 
   // see logs in AWS Cloudwatch

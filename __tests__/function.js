@@ -12,7 +12,7 @@ describe('serverless-boilerplate:function', () => {
       .withPrompts({
         name: 'users',
         method: 'get',
-        nested: false
+        nested: 'Normal "/users"'
       })
       .withGenerators([
         [helpers.createDummyGenerator(), '../generators/app']
@@ -23,6 +23,9 @@ describe('serverless-boilerplate:function', () => {
   it('generate GET method', () => {
     assert.file('functions/users/get.js');
   });
+
+  xit('generate a nested method');
+  xit('generate a method by id');
 
   // File serverless.yml do not exists
   xit('generate a valid serverless.yml');

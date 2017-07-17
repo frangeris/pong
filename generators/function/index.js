@@ -105,7 +105,7 @@ module.exports = class extends Generator {
 
     // Final name of lambda function & handler
     let dest = handler;
-    lambda += this.props.name;
+    lambda += `-${this.props.name}`;
     handler += `${this.props.name}/${filename}.handler`;
 
     try {
@@ -149,7 +149,7 @@ module.exports = class extends Generator {
       {
         lambda,
         method,
-        path: (this.props.nested.match(/Nested/)) ? '../../../' : '../../'
+        path: (this.props.nested.match(/Nested/)) ? '../../..' : '../..'
       }
     );
   }
