@@ -1,11 +1,12 @@
 'use strict'
-const response = require('../../helpers/response')
+const response = require('<%= path %>/helpers/response')
 
 module.exports.handler = (event, context, callback) => {
-  global.cb = callback
+  global.cb = callback<% if (method.match(/post|put/)) { %>
+  let body = JSON.parse(event.body)<% } %>
 
   // see logs in AWS Cloudwatch
-  console.log('<%= name %> <%= method %> http method')
+  console.log('Hello from <%= lambda %> <%= method %> http method')
 
   response(200)
 }
