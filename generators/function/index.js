@@ -88,25 +88,30 @@ module.exports = class extends Generator {
     let method = `${this.props.method}`;
     let handler = 'functions/';
     let filename = method;
-    let lambda = `${method}-`;
+    let lambda = `${method}`;
+    let dest = handler;
 
     // Build the configuration file
     if (this.props.nested.match(/By id/)) {
       // By id
       filename = 'id';
-      handler += this.props.name;
+      dest += this.props.name;
     } else if (this.props.nested.match(/Nested/)) {
       // Nested
-      handler = this.props.name;
-      lambda += this.currentDir;
+      lambda += `-${this.currentDir}`;
+      handler += `${this.currentDir}/`;
+      dest = this.props.name;
     } else {
-      handler += this.props.name;
+      dest += this.props.name;
     }
 
     // Final name of lambda function & handler
-    let dest = handler;
+    handler += this.props.name;
     lambda += `-${this.props.name}`;
-    handler += `${this.props.name}/${filename}.handler`;
+    if (this.props.nested.match(/By id/)) {
+      lambda += '-id';
+    }
+    handler += `/${filename}.handler`;
 
     try {
       // Start overwrite config file
