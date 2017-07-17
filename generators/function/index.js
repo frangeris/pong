@@ -58,7 +58,15 @@ module.exports = class extends Generator {
         type: 'list',
         name: 'method',
         message: 'Which HTTP method?',
-        choices: ['GET', 'POST', 'PUT', 'DELETE'],
+        choices: answers => {
+          let disabled = answers.nested.match(/By id/);
+          return [
+            {name: 'GET', disabled: false},
+            {name: 'POST', disabled},
+            {name: 'PUT', disabled},
+            {name: 'DELETE', disabled}
+          ];
+        },
         filter: _.toLower
       },
       {
@@ -66,8 +74,9 @@ module.exports = class extends Generator {
         name: 'description',
         message: 'Your function description',
         default: answers => {
-          let name = (answers.nested) ? `${this.currentDir} ${answers.name}` : answers.name;
-          return `${_.capitalize(answers.method)} ${name}`;
+          let name = (answers.nested.match(/Nested/)) ? `${this.currentDir} ${answers.name}` : answers.name;
+          let byId = (answers.nested.match(/By id/)) ? ' by id' : '';
+          return `${_.capitalize(answers.method)} ${name}${byId}`;
         }
       }
     ]).then(answers => {
@@ -76,25 +85,31 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    let func = `${this.props.method}`;
-    let dest = 'functions/';
-    let handler = '';
+    let method = `${this.props.method}`;
+    let handler = 'functions/';
+    let filename = method;
+    let lambda = `${method}-`;
 
-    // Append parent name, folder name nested
-    if (this.props.nested) {
-      func += `-${this.currentDir}`;
-      dest = '';
+    // Build the configuration file
+    if (this.props.nested.match(/By id/)) {
+      // By id
+      filename = 'id';
+      handler += this.props.name;
+    } else if (this.props.nested.match(/Nested/)) {
+      // Nested
+      handler = this.props.name;
+      lambda += this.currentDir;
+    } else {
+      handler += this.props.name;
     }
-    let name = _.toLower(`${func}-${this.props.name}`);
-    dest += this.props.name;
+
+    // Final name of lambda function & handler
+    let dest = handler;
+    lambda += this.props.name;
+    handler += `${this.props.name}/${filename}.handler`;
 
     try {
-      // Build the configuration file
-      if (this.props.nested) {
-        handler = 'functions/';
-        handler += `${this.currentDir}/`;
-      }
-      handler += `${dest}/${this.props.method}.handler`;
+      // Start overwrite config file
       let serverless = yaml.safeLoad(fs.readFileSync(this.configFile, 'utf8'));
       let http = {
         method: _.toUpper(this.props.method),
@@ -106,8 +121,8 @@ module.exports = class extends Generator {
         http.cors = true;
       }
 
-      serverless.functions[name] = {
-        name: `${serverless.service}-${name}`,
+      serverless.functions[lambda] = {
+        name: `${serverless.service}-${lambda}`,
         description: this.props.description,
         handler,
         events: [
@@ -120,7 +135,7 @@ module.exports = class extends Generator {
       fs.writeFile(
         this.configFile,
         yaml.safeDump(serverless),
-        () => this.log.ok(`Function "${name}" generated successfully`)
+        () => this.log.ok(`Function "${lambda}" generated successfully`)
       );
     } catch (ex) {
       this.log.error('Could not read/write serverless.yml file.');
@@ -130,10 +145,11 @@ module.exports = class extends Generator {
     mkdirp(dest);
     this.fs.copyTpl(
       this.templatePath('handler.js'),
-      this.destinationPath(`${dest}/${this.props.method}.js`),
+      this.destinationPath(`${dest}/${filename}.js`),
       {
-        name,
-        method: func
+        lambda,
+        method,
+        path: (this.props.nested.match(/Nested/)) ? '../../../' : '../../'
       }
     );
   }
