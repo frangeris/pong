@@ -63,8 +63,8 @@ module.exports = class extends Generator {
           return [
             {name: 'GET', disabled: false},
             {name: 'POST', disabled},
-            {name: 'PUT', disabled},
-            {name: 'DELETE', disabled}
+            {name: 'PUT', disabled: false},
+            {name: 'DELETE', disabled: false}
           ];
         },
         filter: _.toLower
@@ -91,10 +91,13 @@ module.exports = class extends Generator {
     let lambda = `${method}`;
     let dest = handler;
 
+    // If file name just when GET by id
+    if (method === 'get' && this.props.nested.match(/By id/)) {
+      filename = 'id';
+    }
+
     // Build the configuration file
     if (this.props.nested.match(/By id/)) {
-      // By id
-      filename = 'id';
       dest += this.props.name;
     } else if (this.props.nested.match(/Nested/)) {
       // Nested
@@ -108,7 +111,7 @@ module.exports = class extends Generator {
     // Final name of lambda function & handler
     handler += this.props.name;
     lambda += `-${this.props.name}`;
-    if (this.props.nested.match(/By id/)) {
+    if (method === 'get' && this.props.nested.match(/By id/)) {
       lambda += '-id';
     }
     handler += `/${filename}.handler`;
