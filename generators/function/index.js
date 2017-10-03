@@ -9,8 +9,6 @@ const glob = require('glob');
 
 module.exports = class extends Generator {
   initializing() {
-    this.option('enable-cors');
-
     this.currentDir = path.basename(process.cwd());
     this.props = {};
 
@@ -124,10 +122,8 @@ module.exports = class extends Generator {
         path: this.props.name
       };
 
-      // If enable-cors
-      if (this.options.enableCors) {
-        http.cors = true;
-      }
+      // Enable cors by default
+      http.cors = true;
 
       serverless.functions[lambda] = {
         name: `${serverless.service}-${lambda}`,
