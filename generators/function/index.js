@@ -115,11 +115,15 @@ module.exports = class extends Generator {
     handler += `/${filename}.handler`;
 
     try {
+      // Substract the url path
+      let nestedPath = this.props.nested.match(`"(.*)"`);
+      let urlPath = nestedPath ? nestedPath[1] : this.props.name;
+
       // Start overwrite config file
       let serverless = yaml.safeLoad(fs.readFileSync(this.configFile, 'utf8'));
       let http = {
         method: _.toUpper(this.props.method),
-        path: this.props.name
+        path: urlPath
       };
 
       // Enable cors by default
@@ -139,7 +143,7 @@ module.exports = class extends Generator {
       fs.writeFile(
         this.configFile,
         yaml.safeDump(serverless),
-        () => this.log.ok(`Function "${lambda}" generated successfully`)
+        () => this.log.ok(`${_.toUpper(method)} ${urlPath} for "${lambda}" function generated successfully`)
       );
     } catch (ex) {
       this.log.error('Could not read/write serverless.yml file.');
