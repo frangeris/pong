@@ -1,6 +1,6 @@
 {
   "name": "generator-serverless-boilerplate",
-  "version": "0.3.8",
+  "version": "0.3.11",
   "description": "Serverless boilerplate for RESTful api creation",
   "license": "MIT",
   "author": {
@@ -12,7 +12,6 @@
   ],
   "main": "generators/index.js",
   "keywords": [
-    "",
     "yeoman-generator"
   ],
   "devDependencies": {
