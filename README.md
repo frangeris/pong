@@ -19,7 +19,7 @@
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat
 [prs]: http://makeapullrequest.com
 
-Build scalables RESTful apis creations under serverless arquitecture in AWS (serverless +v1.x), create a good codebase with scalability while the project grow up could require a lot of efford, time and dedication for know how the framework works, often this process of learning tends to be while we're building the product and this require agility and fast learning, customizing the code could be annoying a take more time than expected, that's the reason of this skeleton. 
+Build scalables RESTful apis under serverless arquitecture for AWS (serverless +v1.x), create a good codebase with scalability while the project grow up could require a lot of efford, time and dedication for know how the framework works, often this process of learning tends to be while we're building the product and this require agility and fast learning, customizing the code could be annoying a take more time than expected, that's the reason of this skeleton. 
 
 ## Why Pong?
 Have you play ping-pong? is a sport in which two players ([frontend and backend](https://en.wikipedia.org/wiki/Front_and_back_ends)) hit a lightweight ball ([HATEOAS](https://en.wikipedia.org/wiki/HATEOAS)) back and forth across a table ([Restful](https://en.wikipedia.org/wiki/Representational_state_transfer)) using small bats ([Vuejs](https://vuejs.org/) and [Serverless Framework](https://github.com/serverless/serverless)). 
