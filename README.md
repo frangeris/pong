@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://cdn.rawgit.com/frangeris/pong/master/boilerplate-logo.svg"
+    <img src="https://cdn.rawgit.com/frangeris/pong/e3f562dc/boilerplate-logo.svg"
       alt="Serverless RESTful Boilerplate" width="500" />
 </div>
 
