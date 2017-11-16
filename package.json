@@ -20,7 +20,7 @@
   "devDependencies": {
     "asyncawait": "^1.0.6",
     "babel-jest": "^20.0.3",
-    "eslint": "^3.18.0",
+    "eslint": "^3.19.0",
     "eslint-config-xo-space": "^0.16.0",
     "jest": "^19.0.2",
     "jest-cli": "^20.0.4",
@@ -30,16 +30,16 @@
     "yeoman-test": "^1.6.0"
   },
   "dependencies": {
-    "chalk": "^1.1.3",
+    "chalk": "^2.3.0",
     "glob": "^7.1.2",
     "js-yaml": "^3.8.4",
     "lodash": "^4.17.4",
-    "yeoman-generator": "^1.0.0",
+    "yeoman-generator": "^2.0.1",
     "yosay": "^2.0.0"
   },
   "scripts": {
-    "pretest": "eslint . --fix",
-    "test": "jest"
+    "pretest": "./node_modules/.bin/eslint . --fix",
+    "test": "./node_modules/.bin/jest"
   },
   "eslintConfig": {
     "extends": "xo-space",
