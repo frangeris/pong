@@ -27,6 +27,7 @@
     "nsp": "^2.8.1",
     "options-resolver": "^1.0.1",
     "yeoman-assert": "^3.0.0",
+    "yeoman-generator": "^1.1.1",
     "yeoman-test": "^1.6.0"
   },
   "dependencies": {
@@ -34,7 +35,6 @@
     "glob": "^7.1.2",
     "js-yaml": "^3.8.4",
     "lodash": "^4.17.4",
-    "yeoman-generator": "^1.0.0",
     "yosay": "^2.0.0"
   },
   "scripts": {
