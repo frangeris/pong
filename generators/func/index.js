@@ -9,8 +9,10 @@ const glob = require('glob');
 
 module.exports = class extends Generator {
   initializing() {
-    this.currentDir = path.basename(process.cwd());
+    // this.currentDir = path.basename(process.cwd());
     this.props = {};
+    this.byId = false;
+    this.resources = [];
 
     // Find conf file
     let locate = () => {
@@ -71,12 +73,13 @@ module.exports = class extends Generator {
         message: 'Your function description',
         default: answers => {
           let by = null;
-          let resources = answers.url.split('/').filter(p => p !== '' && !p.match(/{|}/));
+          this.resources = answers.url.split('/').filter(p => p !== '' && !p.match(/{|}/));
           if (answers.url.endsWith('}')) {
+            this.byId = true;
             by = ' by ' + answers.url.split(/[{}]/).filter(p => p !== '' && !p.includes('/')).pop();
           }
 
-          return `${_.capitalize(answers.method)} ${resources.join(' ')}${by}`;
+          return `${_.capitalize(answers.method)} ${this.resources.join(' ')}${by}`;
         }
       }
     ]).then(answers => {
@@ -86,16 +89,24 @@ module.exports = class extends Generator {
 
   writing() {
     let method = `${this.props.method}`;
-    let handler = 'functions/';
     let filename = method;
-    let lambda = `${method}`;
-    let dest = handler;
-    /*
-    // If file name just when GET by id
-    if (method === 'get' && this.props.nested.match(/By id/)) {
+    let lambda = `${method}-${this.resources.join('-')}`;
+    // let handler = 'functions/';
+    // let dest = handler;
+
+    // Only when by resource
+    if (this.byId) {
       filename = 'id';
     }
 
+    // Name of lambda
+    // handler += this.props.name;
+    if (method === 'get' && this.props.nested.match(/By id/)) {
+      lambda += '-id';
+    }
+    handler += `/${filename}.handler`;
+
+    /*
     // Build the configuration file
     if (this.props.nested.match(/By id/)) {
       dest += this.props.name;
@@ -108,13 +119,7 @@ module.exports = class extends Generator {
       dest += this.props.name;
     }
 
-    // Final name of lambda function & handler
-    handler += this.props.name;
-    lambda += `-${this.props.name}`;
-    if (method === 'get' && this.props.nested.match(/By id/)) {
-      lambda += '-id';
-    }
-    handler += `/${filename}.handler`;
+
 
     try {
       // Substract the url path
