@@ -33,36 +33,34 @@ module.exports = class extends Generator {
     return this.prompt([
       {
         type: 'input',
-        name: 'name',
-        message: 'Resource name',
-        filter: _.kebabCase.toLower,
+        name: 'url',
+        message: 'Resource URL (can include parameters)',
+        filter: value => {
+          if (!value.startsWith('/')) {
+            value = `/${value}`;
+          }
+          return _.toLower(value);
+        },
         validate: value => {
+          // @TODO: cant have special chars
           return !_.isEmpty(value);
         }
       },
-      {
-        type: 'list',
-        name: 'nested',
-        message: 'What kind of design?',
-        choices: answers => {
-          return [
-            `Normal "/${answers.name}"`,
-            `By id "/${answers.name}/{id}"`,
-            `Nested "/${this.currentDir}/{id}/${answers.name}"`
-          ];
-        }
-      },
+
       {
         type: 'list',
         name: 'method',
         message: 'Which HTTP method?',
-        choices: answers => {
-          let disabled = answers.nested.match(/By id/);
+        choices: () => {
           return [
-            {name: 'GET', disabled: false},
-            {name: 'POST', disabled},
-            {name: 'PUT', disabled: false},
-            {name: 'DELETE', disabled: false}
+            'GET',
+            'POST',
+            'PUT',
+            'DELETE',
+            'HEAD',
+            'CONNECT',
+            'OPTIONS',
+            'PATH'
           ];
         },
         filter: _.toLower
@@ -72,9 +70,13 @@ module.exports = class extends Generator {
         name: 'description',
         message: 'Your function description',
         default: answers => {
-          let name = (answers.nested.match(/Nested/)) ? `${this.currentDir} ${answers.name}` : answers.name;
-          let byId = (answers.nested.match(/By id/)) ? ' by id' : '';
-          return `${_.capitalize(answers.method)} ${name}${byId}`;
+          let by = null;
+          let resources = answers.url.split('/').filter(p => p !== '' && !p.match(/{|}/));
+          if (answers.url.endsWith('}')) {
+            by = ' by ' + answers.url.split(/[{}]/).filter(p => p !== '' && !p.includes('/')).pop();
+          }
+
+          return `${_.capitalize(answers.method)} ${resources.join(' ')}${by}`;
         }
       }
     ]).then(answers => {
@@ -88,7 +90,7 @@ module.exports = class extends Generator {
     let filename = method;
     let lambda = `${method}`;
     let dest = handler;
-
+    /*
     // If file name just when GET by id
     if (method === 'get' && this.props.nested.match(/By id/)) {
       filename = 'id';
@@ -160,5 +162,6 @@ module.exports = class extends Generator {
         path: (this.props.nested.match(/Nested/)) ? '../../..' : '../..'
       }
     );
+    */
   }
 };
