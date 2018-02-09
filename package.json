@@ -21,11 +21,11 @@
     "asyncawait": "^1.0.6",
     "babel-jest": "^20.0.3",
     "eslint": "^3.19.0",
-    "eslint-config-xo-space": "^0.16.0",
     "jest": "^19.0.2",
     "jest-cli": "^20.0.4",
     "nsp": "^2.8.1",
     "options-resolver": "^1.0.1",
+    "standard": "^10.0.3",
     "yeoman-assert": "^3.0.0",
     "yeoman-generator": "^1.1.1",
     "yeoman-test": "^1.6.0"
@@ -39,15 +39,8 @@
     "yosay": "^2.0.0"
   },
   "scripts": {
-    "pretest": "./node_modules/.bin/eslint . --fix",
+    "pretest": "./node_modules/.bin/standard --fix",
     "test": "./node_modules/.bin/jest"
-  },
-  "eslintConfig": {
-    "extends": "xo-space",
-    "env": {
-      "jest": true,
-      "node": true
-    }
   },
   "repository": "https://github.com/frangeris/pong"
 }
