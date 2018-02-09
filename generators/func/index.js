@@ -1,37 +1,37 @@
-'use strict';
-const Generator = require('yeoman-generator');
-const _ = require('lodash');
-const yaml = require('js-yaml');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-const path = require('path');
-const glob = require('glob');
+'use strict'
+const Generator = require('yeoman-generator')
+const _ = require('lodash')
+const yaml = require('js-yaml')
+const fs = require('fs')
+const mkdirp = require('mkdirp')
+const path = require('path')
+const glob = require('glob')
 
 module.exports = class extends Generator {
-  initializing() {
+  initializing () {
     // this.currentDir = path.basename(process.cwd());
-    this.props = {};
-    this.byId = false;
-    this.resources = [];
+    this.props = {}
+    this.byId = false
+    this.resources = []
 
     // Find conf file
     let locate = () => {
       let files = glob.sync('{./,../,../../,../../../}/serverless.yml', {
         nodir: true,
         realpath: true
-      });
+      })
 
       if (!files) {
         this.log.error('serverless.yml NOT FOUND, for overwrite go inside a project.');
       }
 
-      return files ? files[0] : './';
-    };
+      return files ? files[0] : './'
+    }
 
-    this.configFile = locate();
+    this.configFile = locate()
   }
 
-  prompting() {
+  prompting () {
     return this.prompt([
       {
         type: 'input',
@@ -39,13 +39,13 @@ module.exports = class extends Generator {
         message: 'Resource URL (can include parameters)',
         filter: value => {
           if (!value.startsWith('/')) {
-            value = `/${value}`;
+            value = `/${value}`
           }
-          return _.toLower(value);
+          return _.toLower(value)
         },
         validate: value => {
           // @TODO: cant have special chars
-          return !_.isEmpty(value);
+          return !_.isEmpty(value)
         }
       },
 
@@ -63,7 +63,7 @@ module.exports = class extends Generator {
             'CONNECT',
             'OPTIONS',
             'PATH'
-          ];
+          ]
         },
         filter: _.toLower
       },
@@ -72,39 +72,40 @@ module.exports = class extends Generator {
         name: 'description',
         message: 'Your function description',
         default: answers => {
-          let by = null;
-          this.resources = answers.url.split('/').filter(p => p !== '' && !p.match(/{|}/));
+          let by = ''
+          this.resources = answers.url.split('/').filter(p => p !== '' && !p.match(/{|}/))
           if (answers.url.endsWith('}')) {
-            this.byId = true;
-            by = ' by ' + answers.url.split(/[{}]/).filter(p => p !== '' && !p.includes('/')).pop();
+            this.byId = true
+            by = ' by ' + answers.url.split(/[{}]/).filter(p => p !== '' && !p.includes('/')).pop()
           }
 
-          return `${_.capitalize(answers.method)} ${this.resources.join(' ')}${by}`;
+          return `${_.capitalize(answers.method)} ${this.resources.join(' ')}${by}`
         }
       }
     ]).then(answers => {
-      this.props = answers;
-    });
+      this.props = answers
+    })
   }
 
-  writing() {
-    let method = `${this.props.method}`;
-    let filename = method;
-    let lambda = `${method}-${this.resources.join('-')}`;
-    // let handler = 'functions/';
-    // let dest = handler;
+  writing () {
+    let method = `${this.props.method}`
+    let filename = method
+    let lambda = `${method}-${this.resources.join('-')}`
+    let handler = 'functions/'
 
     // Only when by resource
     if (this.byId) {
-      filename = 'id';
+      filename = 'id'
     }
 
     // Name of lambda
     // handler += this.props.name;
     if (method === 'get' && this.props.nested.match(/By id/)) {
-      lambda += '-id';
+      lambda += '-id'
     }
-    handler += `/${filename}.handler`;
+    handler += `/${filename}.handler`
+
+    console.log(method, filename, lambda, handler)
 
     /*
     // Build the configuration file
