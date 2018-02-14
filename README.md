@@ -295,7 +295,6 @@ After adding the code bellow, just import the helper lib built-in and that's it.
 const { validate, resolver, response } = require('../../helpers')
 
 module.exports.handler = (event, context, callback) => {
-
     // needed for response scope
     global.cb = callback
 
@@ -310,10 +309,8 @@ module.exports.handler = (event, context, callback) => {
 
     // { email: 'tommy@powerrangers.com' }
     validate(event)
-        
         // all good!
         .then((body) => console.log('passed!'))
-        
         /*
             400 Bad Request
             {"message": "The required options \"password\" are missing"}
