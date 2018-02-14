@@ -1,8 +1,7 @@
 'use strict'
 const {resolver, validate} = require('../generators/app/templates/helpers')
 
-// eslint-disable-next-line
-global.cb = (err, message) => message;
+global.cb = (err, message) => message // eslint-disable-line
 
 describe('helpers', () => {
   it('validate incorrect fields', () => {
