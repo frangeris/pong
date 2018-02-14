@@ -90,24 +90,16 @@ module.exports = class extends Generator {
     // only when by resource
     if (this.byId) {
       filename = 'id'
-    }
-
-    // Name of lambda
-    // handler += this.props.name;
-    if (method === 'get' && this.byId) {
-      lambda += '-id'
+      if (method === 'get') {
+        lambda += '-id'
+      }
     }
 
     // build the configuration file
     try {
-      let http = {
-        method: _.toUpper(this.props.method),
-        path: this.props.path,
-        cors: true
-      }
-
       // create function handler
-      mkdirp(folders)
+      let handler = `functions/${folders.join('/')}/${filename}.handler`
+      mkdirp(folders.join('/'))
       this.fs.copyTpl(
         this.templatePath('handler'),
         this.destinationPath(`${folders}/${filename}.js`),
@@ -123,18 +115,24 @@ module.exports = class extends Generator {
       serverless.functions[lambda] = {
         name: `${serverless.service}-${lambda}`,
         description: this.props.description,
-        handler: `functions/${folders.join('/')}/${filename}.handler`,
-        events: [{ http }]
+        handler,
+        events: [{
+          http: {
+            method: _.toUpper(this.props.method),
+            path: this.props.path,
+            cors: true
+          }
+        }]
       }
 
       // write the file
       fs.writeFile(
         this.configFile,
         yaml.safeDump(serverless),
-        () => this.log.ok(`${_.toUpper(method)} ${this.props.path} for "${lambda}"`)
+        () => this.log.ok(`${_.toUpper(method)} ${this.props.path} ► ${handler} (${lambda})`)
       )
-    } catch (error) {
-      this.log.error('Could not read/write serverless.yml file.')
+    } catch (err) {
+      this.log.error(`Error: ${err.message}`)
     }
   }
 }

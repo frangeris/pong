@@ -60,20 +60,26 @@ module.exports = class extends Generator {
   }
 
   writing () {
-    // Copy normal files/folders
+    // copy normal files/folders
     this.fs.copyTpl(
       this.templatePath(),
       this.destinationPath(),
       this.props
     )
 
-    // Hidden files
+    // hidden files
     this.fs.copy(
       this.templatePath('.*'),
       this.destinationPath()
     )
 
-    // Migrate .env vars
+    // vscode
+    this.fs.copy(
+      this.templatePath('.vscode'),
+      this.destinationPath()
+    )
+
+    // migrate .env vars
     this.fs.copy(
       this.templatePath('.env.yml.example'),
       this.destinationPath('.env.yml')

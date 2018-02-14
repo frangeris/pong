@@ -3,16 +3,16 @@ const path = require('path')
 const assert = require('yeoman-assert')
 const helpers = require('yeoman-test')
 
-describe('serverless-boilerplate:function', () => {
+describe('pong:func', () => {
   beforeEach(done => {
     helpers
       .run(path.join(__dirname, '../generators/func'), {
         tmpir: false
       })
       .withPrompts({
-        name: 'users',
+        path: 'users',
         method: 'get',
-        nested: 'Normal "/users"'
+        description: 'Get users'
       })
       .withGenerators([
         [helpers.createDummyGenerator(), '../generators/app']
