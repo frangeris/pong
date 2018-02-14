@@ -35,14 +35,9 @@ module.exports = class extends Generator {
     return this.prompt([
       {
         type: 'input',
-        name: 'url',
-        message: 'Resource URL (can include parameters)',
-        filter: value => {
-          if (!value.startsWith('/')) {
-            value = `/${value}`
-          }
-          return _.toLower(value)
-        },
+        name: 'path',
+        message: 'Path (can include parameters)',
+        filter: value => (!value || !value.startsWith('/')) ? `/${value}` : _.toLower(value),
         validate: value => {
           // @TODO: cant have special chars
           return !_.isEmpty(value)
@@ -73,10 +68,10 @@ module.exports = class extends Generator {
         message: 'Your function description',
         default: answers => {
           let by = ''
-          this.resources = answers.url.split('/').filter(p => p !== '' && !p.match(/{|}/))
-          if (answers.url.endsWith('}')) {
+          this.resources = answers.path.split('/').filter(p => p !== '' && !p.match(/{|}/))
+          if (answers.path.endsWith('}')) {
             this.byId = true
-            by = ' by ' + answers.url.split(/[{}]/).filter(p => p !== '' && !p.includes('/')).pop()
+            by = ' by ' + answers.path.split(/[{}]/).filter(p => p !== '' && !p.includes('/')).pop()
           }
 
           return `${_.capitalize(answers.method)} ${this.resources.join(' ')}${by}`
@@ -91,83 +86,56 @@ module.exports = class extends Generator {
     let method = `${this.props.method}`
     let filename = method
     let lambda = `${method}-${this.resources.join('-')}`
-    let handler = 'functions/'
+    let folders = this.props.path.match(/[\w]+(?![^{]*\})/g)
 
-    // Only when by resource
+    // only when by resource
     if (this.byId) {
       filename = 'id'
     }
 
     // Name of lambda
     // handler += this.props.name;
-    if (method === 'get' && this.props.nested.match(/By id/)) {
+    if (method === 'get' && this.byId) {
       lambda += '-id'
     }
-    handler += `/${filename}.handler`
 
-    console.log(method, filename, lambda, handler)
-
-    /*
-    // Build the configuration file
-    if (this.props.nested.match(/By id/)) {
-      dest += this.props.name;
-    } else if (this.props.nested.match(/Nested/)) {
-      // Nested
-      lambda += `-${this.currentDir}`;
-      handler += `${this.currentDir}/`;
-      dest = this.props.name;
-    } else {
-      dest += this.props.name;
-    }
-
-
-
+    // build the configuration file
     try {
-      // Substract the url path
-      let nestedPath = this.props.nested.match(`"(.*)"`);
-      let urlPath = nestedPath ? nestedPath[1] : this.props.name;
-
-      // Start overwrite config file
-      let serverless = yaml.safeLoad(fs.readFileSync(this.configFile, 'utf8'));
       let http = {
         method: _.toUpper(this.props.method),
-        path: urlPath
-      };
+        path: this.props.path,
+        cors: true
+      }
 
-      // Enable cors by default
-      http.cors = true;
+      // create function handler
+      mkdirp(folders)
+      this.fs.copyTpl(
+        this.templatePath('handler.js'),
+        this.destinationPath(`${folders}/${filename}.js`),
+        {
+          lambda,
+          method,
+          path: '../'.repeat(folders.length)
+        }
+      )
 
+      // overwrite serverless.yml
+      let serverless = yaml.safeLoad(fs.readFileSync(this.configFile, 'utf8'))
       serverless.functions[lambda] = {
         name: `${serverless.service}-${lambda}`,
         description: this.props.description,
-        handler,
-        events: [
-          {
-            http
-          }
-        ]
-      };
+        handler: `functions/${folders.join('/')}/${filename}.handler`,
+        events: [{ http }]
+      }
 
+      // write the file
       fs.writeFile(
         this.configFile,
         yaml.safeDump(serverless),
-        () => this.log.ok(`${_.toUpper(method)} ${urlPath} for "${lambda}" function generated successfully`)
-      );
-    } catch (ex) {
-      this.log.error('Could not read/write serverless.yml file.');
+        () => this.log.ok(`${_.toUpper(method)} ${this.props.path} for "${lambda}"`)
+      )
+    } catch (error) {
+      this.log.error('Could not read/write serverless.yml file.')
     }
-
-    // Create function handler
-    mkdirp(dest);
-    this.fs.copyTpl(
-      this.templatePath('handler.js'),
-      this.destinationPath(`${dest}/${filename}.js`),
-      {
-        lambda,
-        method,
-        path: (this.props.nested.match(/Nested/)) ? '../../..' : '../..'
-      }
-    );
-    */
   }
-};
+}
