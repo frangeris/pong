@@ -75,8 +75,18 @@ module.exports = class extends Generator {
 
     // vscode
     this.fs.copy(
-      this.templatePath('.vscode'),
-      this.destinationPath()
+      this.templatePath('.vscode/debug.js'),
+      this.destinationPath('.vscode/debug.js')
+    )
+
+    this.fs.copy(
+      this.templatePath('.vscode/event.json.example'),
+      this.destinationPath('.vscode/event.json')
+    )
+
+    this.fs.copy(
+      this.templatePath('.vscode/launch.json'),
+      this.destinationPath('.vscode/launch.json')
     )
 
     // migrate .env vars
