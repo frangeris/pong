@@ -79,19 +79,21 @@ drwxr-xr-x 2 frang 4,0K feb 14 12:34 orgs <-------------- Nested folder was crea
 ```
 > The `func` subgenerator will save the path with parameters (if have)
 
-## New updates from here?
+## New updates & new nice stuff here?
 Thank's to [Yeoman](http://yeoman.io) :raised_hands: we have a [conflict handler](http://yeoman.io/generator/Conflicter.html) out-of-the-box.
 
 > The Conflicter is a module that can be used to detect conflict between files. Each Generator file system helpers pass files through this module to make sure they don't break a user file.
 
-To update a project with the latest features in the boilerplate just run `yo pong:update` inside the project, the generator must detect and automatically inform that an update will be made, the generator will only update global files, if you have modifed "core" files be careful while overwriting in updates.
+To update a project with the latest features in the boilerplate just run `yo pong` inside the project, the generator must detect and automatically inform that an update will be made, the generator will only update global files, if you have modifed "core" files be careful while overwriting in updates.
 
 ```bash
 dev @ ~/code/my-api
-$ yo pong:update
+$ yo pong
 Project detected, updating the boilerplate files instead...
 ? Your project name (my-api)
 ```
+Resolve conflicts (in case that exists) and continue...
+
 *Note:* it will ask for some fields in case you want to update basic parameters in `serverless.yml`, in case nothing change, hit enter to use existing previous values.
 
 ## Now, let's Rock n' roll
