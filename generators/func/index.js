@@ -107,7 +107,7 @@ module.exports = class extends Generator {
         {
           lambda,
           method,
-          path: '../'.repeat(folders.length)
+          path: '../'.repeat(folders.length + 1)
         }
       )
 
