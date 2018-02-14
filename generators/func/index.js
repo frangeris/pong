@@ -98,11 +98,12 @@ module.exports = class extends Generator {
     // build the configuration file
     try {
       // create function handler
-      let handler = `functions/${folders.join('/')}/${filename}.handler`
-      mkdirp(folders.join('/'))
+      let destination = `functions/${folders.join('/')}`
+      mkdirp(destination)
+      let handler = `${destination}/${filename}.handler`
       this.fs.copyTpl(
         this.templatePath('handler'),
-        this.destinationPath(`${folders}/${filename}.js`),
+        this.destinationPath(`${destination}/${filename}.js`),
         {
           lambda,
           method,

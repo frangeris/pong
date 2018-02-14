@@ -11,11 +11,11 @@ describe('pong:app', () => {
   // validate structure
   it('generate base files', () => {
     assert.file([
+      '__tests__',
       '.vscode',
       'functions',
       'helpers',
       'templates',
-      'tests',
       '.env.yml.example',
       '.gitignore',
       'LICENSE',

@@ -89,6 +89,12 @@ module.exports = class extends Generator {
       this.destinationPath('.vscode/launch.json')
     )
 
+    // tests folder
+    this.fs.copy(
+      this.templatePath('__tests__/.gitkeep'),
+      this.destinationPath('__tests__/.gitkeep')
+    )
+
     // migrate .env vars
     this.fs.copy(
       this.templatePath('.env.yml.example'),
