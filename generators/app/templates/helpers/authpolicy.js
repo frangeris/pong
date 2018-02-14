@@ -26,7 +26,7 @@ function AuthPolicy (principal, awsAccountId, apiOptions) {
    * @property awsAccountId
    * @type {String}
    */
-  this.awsAccountId = awsAccountId;
+  this.awsAccountId = awsAccountId
 
   /**
    * The principal used for the policy, this should be a unique identifier for
@@ -35,7 +35,7 @@ function AuthPolicy (principal, awsAccountId, apiOptions) {
    * @property principalId
    * @type {String}
    */
-  this.principalId = principal;
+  this.principalId = principal
 
   /**
    * The policy version used for the evaluation. This should always be "2012-10-17"
@@ -44,7 +44,7 @@ function AuthPolicy (principal, awsAccountId, apiOptions) {
    * @type {String}
    * @default "2012-10-17"
    */
-  this.version = "2012-10-17";
+  this.version = '2012-10-17'
 
   /**
    * The regular expression used to validate resource paths for the policy
@@ -53,30 +53,30 @@ function AuthPolicy (principal, awsAccountId, apiOptions) {
    * @type {RegExp}
    * @default '^\/[/.a-zA-Z0-9-\*]+$'
    */
-  this.pathRegex = new RegExp('^[/.a-zA-Z0-9-\*]+$');
+  this.pathRegex = new RegExp('^[/.a-zA-Z0-9-\*]+$') // eslint-disable-line
 
   // these are the internal lists of allowed and denied methods. These are lists
   // of objects and each object has 2 properties: A resource ARN and a nullable
   // conditions statement.
   // the build method processes these lists and generates the approriate
   // statements for the final policy
-  this.allowMethods = [];
-  this.denyMethods = [];
+  this.allowMethods = []
+  this.denyMethods = []
 
   if (!apiOptions || !apiOptions.restApiId) {
-    this.restApiId = "*";
+    this.restApiId = '*'
   } else {
-    this.restApiId = apiOptions.restApiId;
+    this.restApiId = apiOptions.restApiId
   }
   if (!apiOptions || !apiOptions.region) {
-    this.region = "*";
+    this.region = '*'
   } else {
-    this.region = apiOptions.region;
+    this.region = apiOptions.region
   }
   if (!apiOptions || !apiOptions.stage) {
-    this.stage = "*";
+    this.stage = '*'
   } else {
-    this.stage = apiOptions.stage;
+    this.stage = apiOptions.stage
   }
 };
 
@@ -88,15 +88,15 @@ function AuthPolicy (principal, awsAccountId, apiOptions) {
  * @type {Object}
  */
 AuthPolicy.HttpVerb = {
-  GET: "GET",
-  POST: "POST",
-  PUT: "PUT",
-  PATCH: "PATCH",
-  HEAD: "HEAD",
-  DELETE: "DELETE",
-  OPTIONS: "OPTIONS",
-  ALL: "*"
-};
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+  HEAD: 'HEAD',
+  DELETE: 'DELETE',
+  OPTIONS: 'OPTIONS',
+  ALL: '*'
+}
 
 AuthPolicy.prototype = (function () {
   /**
@@ -113,38 +113,38 @@ AuthPolicy.prototype = (function () {
    * @return {void}
    */
   var addMethod = function (effect, verb, resource, conditions) {
-    if (verb != "*" && !AuthPolicy.HttpVerb.hasOwnProperty(verb)) {
-      throw new Error("Invalid HTTP verb " + verb + ". Allowed verbs in AuthPolicy.HttpVerb");
+    if (verb !== '*' && !AuthPolicy.HttpVerb.hasOwnProperty(verb)) {
+      throw new Error('Invalid HTTP verb ' + verb + '. Allowed verbs in AuthPolicy.HttpVerb')
     }
 
     if (!this.pathRegex.test(resource)) {
-      throw new Error("Invalid resource path: " + resource + ". Path should match " + this.pathRegex);
+      throw new Error('Invalid resource path: ' + resource + '. Path should match ' + this.pathRegex)
     }
 
-    var cleanedResource = resource;
-    if (resource.substring(0, 1) == "/") {
-      cleanedResource = resource.substring(1, resource.length);
+    var cleanedResource = resource
+    if (resource.substring(0, 1) === '/') {
+      cleanedResource = resource.substring(1, resource.length)
     }
-    var resourceArn = "arn:aws:execute-api:" +
-      this.region + ":" +
-      this.awsAccountId + ":" +
-      this.restApiId + "/" +
-      this.stage + "/" +
-      verb + "/" +
-      cleanedResource;
+    var resourceArn = 'arn:aws:execute-api:' +
+      this.region + ':' +
+      this.awsAccountId + ':' +
+      this.restApiId + '/' +
+      this.stage + '/' +
+      verb + '/' +
+      cleanedResource
 
-    if (effect.toLowerCase() == "allow") {
+    if (effect.toLowerCase() === 'allow') {
       this.allowMethods.push({
         resourceArn: resourceArn,
         conditions: conditions
-      });
-    } else if (effect.toLowerCase() == "deny") {
+      })
+    } else if (effect.toLowerCase() === 'deny') {
       this.denyMethods.push({
         resourceArn: resourceArn,
         conditions: conditions
       })
     }
-  };
+  }
 
   /**
    * Returns an empty statement object prepopulated with the correct action and the
@@ -156,14 +156,14 @@ AuthPolicy.prototype = (function () {
    *                  properties prepopulated.
    */
   var getEmptyStatement = function (effect) {
-    effect = effect.substring(0, 1).toUpperCase() + effect.substring(1, effect.length).toLowerCase();
-    var statement = {};
-    statement.Action = "execute-api:Invoke";
-    statement.Effect = effect;
-    statement.Resource = [];
+    effect = effect.substring(0, 1).toUpperCase() + effect.substring(1, effect.length).toLowerCase()
+    var statement = {}
+    statement.Action = 'execute-api:Invoke'
+    statement.Effect = effect
+    statement.Resource = []
 
-    return statement;
-  };
+    return statement
+  }
 
   /**
    * This function loops over an array of objects containing a resourceArn and
@@ -176,30 +176,30 @@ AuthPolicy.prototype = (function () {
    * @return {Array} an array of formatted statements for the policy.
    */
   var getStatementsForEffect = function (effect, methods) {
-    var statements = [];
+    var statements = []
 
     if (methods.length > 0) {
-      var statement = getEmptyStatement(effect);
+      var statement = getEmptyStatement(effect)
 
       for (var i = 0; i < methods.length; i++) {
-        var curMethod = methods[i];
+        var curMethod = methods[i]
         if (curMethod.conditions === null || curMethod.conditions.length === 0) {
-          statement.Resource.push(curMethod.resourceArn);
+          statement.Resource.push(curMethod.resourceArn)
         } else {
-          var conditionalStatement = getEmptyStatement(effect);
-          conditionalStatement.Resource.push(curMethod.resourceArn);
-          conditionalStatement.Condition = curMethod.conditions;
-          statements.push(conditionalStatement);
+          var conditionalStatement = getEmptyStatement(effect)
+          conditionalStatement.Resource.push(curMethod.resourceArn)
+          conditionalStatement.Condition = curMethod.conditions
+          statements.push(conditionalStatement)
         }
       }
 
       if (statement.Resource !== null && statement.Resource.length > 0) {
-        statements.push(statement);
+        statements.push(statement)
       }
     }
 
-    return statements;
-  };
+    return statements
+  }
 
   return {
     constructor: AuthPolicy,
@@ -210,7 +210,7 @@ AuthPolicy.prototype = (function () {
      * @method allowAllMethods
      */
     allowAllMethods: function () {
-      addMethod.call(this, "allow", "*", "*", null);
+      addMethod.call(this, 'allow', '*', '*', null)
     },
 
     /**
@@ -219,7 +219,7 @@ AuthPolicy.prototype = (function () {
      * @method denyAllMethods
      */
     denyAllMethods: function () {
-      addMethod.call(this, "deny", "*", "*", null);
+      addMethod.call(this, 'deny', '*', '*', null)
     },
 
     /**
@@ -233,7 +233,7 @@ AuthPolicy.prototype = (function () {
      * @return {void}
      */
     allowMethod: function (verb, resource) {
-      addMethod.call(this, "allow", verb, resource, null);
+      addMethod.call(this, 'allow', verb, resource, null)
     },
 
     /**
@@ -247,7 +247,7 @@ AuthPolicy.prototype = (function () {
      * @return {void}
      */
     denyMethod: function (verb, resource) {
-      addMethod.call(this, "deny", verb, resource, null);
+      addMethod.call(this, 'deny', verb, resource, null)
     },
 
     /**
@@ -263,7 +263,7 @@ AuthPolicy.prototype = (function () {
      * @return {void}
      */
     allowMethodWithConditions: function (verb, resource, conditions) {
-      addMethod.call(this, "allow", verb, resource, conditions);
+      addMethod.call(this, 'allow', verb, resource, conditions)
     },
 
     /**
@@ -279,7 +279,7 @@ AuthPolicy.prototype = (function () {
      * @return {void}
      */
     denyMethodWithConditions: function (verb, resource, conditions) {
-      addMethod.call(this, "deny", verb, resource, conditions);
+      addMethod.call(this, 'deny', verb, resource, conditions)
     },
 
     /**
@@ -294,23 +294,23 @@ AuthPolicy.prototype = (function () {
     build: function () {
       if ((!this.allowMethods || this.allowMethods.length === 0) &&
         (!this.denyMethods || this.denyMethods.length === 0)) {
-        throw new Error("No statements defined for the policy");
+        throw new Error('No statements defined for the policy')
       }
 
-      var policy = {};
-      policy.principalId = this.principalId;
-      var doc = {};
-      doc.Version = this.version;
-      doc.Statement = [];
+      var policy = {}
+      policy.principalId = this.principalId
+      var doc = {}
+      doc.Version = this.version
+      doc.Statement = []
 
-      doc.Statement = doc.Statement.concat(getStatementsForEffect.call(this, "Allow", this.allowMethods));
-      doc.Statement = doc.Statement.concat(getStatementsForEffect.call(this, "Deny", this.denyMethods));
+      doc.Statement = doc.Statement.concat(getStatementsForEffect.call(this, 'Allow', this.allowMethods))
+      doc.Statement = doc.Statement.concat(getStatementsForEffect.call(this, 'Deny', this.denyMethods))
 
-      policy.policyDocument = doc;
+      policy.policyDocument = doc
 
-      return policy;
+      return policy
     }
-  };
-})();
+  }
+})()
 
 module.exports = AuthPolicy

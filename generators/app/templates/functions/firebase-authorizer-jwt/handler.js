@@ -8,35 +8,35 @@ exports.handler = function (event, context, callback) {
   // fail if the token is not jwt
   let decodedJwt = jwt.decode(token, { complete: true })
   if (!decodedJwt) {
-    return callback('Unauthorized')
+    return callback('Unauthorized') // eslint-disable-line
   }
 
   // validate algorithm
-  if (decodedJwt.header.alg != 'RS256') {
-    return callback('Unauthorized')
+  if (decodedJwt.header.alg !== 'RS256') {
+    return callback('Unauthorized') // eslint-disable-line
   }
 
   // get the kid from the token and retrieve corresponding PEM
   let kid = decodedJwt.header.kid
   let pem = pems[kid]
   if (!pem) {
-    return callback('Unauthorized')
+    return callback('Unauthorized') // eslint-disable-line
   }
 
   // validate audience
-  if (decodedJwt.payload.aud != process.env.FIREBASE_PROJECT_ID) {
-    return callback('Unauthorized')
+  if (decodedJwt.payload.aud !== process.env.FIREBASE_PROJECT_ID) {
+    return callback('Unauthorized') // eslint-disable-line
   }
 
   // fail if token is not from your UserPool
-  if (decodedJwt.payload.iss != process.env.FIREBASE_ISS) {
-    return callback('Unauthorized')
+  if (decodedJwt.payload.iss !== process.env.FIREBASE_ISS) {
+    return callback('Unauthorized') // eslint-disable-line
   }
 
   // verify the signature of the JWT token to ensure it's really coming from your User Pool
   jwt.verify(token, pem, { issuer: process.env.FIREBASE_ISS }, function (err, payload) {
     if (err) {
-      return callback('Unauthorized');
+      return callback('Unauthorized') // eslint-disable-line
     } else {
       // valid token. Generate the API Gateway policy for the user
       // always generate the policy on value of 'sub' claim and not for 'username' because username is reassignable
@@ -51,11 +51,7 @@ exports.handler = function (event, context, callback) {
       apiOptions.region = tmp[3]
       apiOptions.restApiId = apiGatewayArnTmp[0]
       apiOptions.stage = apiGatewayArnTmp[1]
-      let method = apiGatewayArnTmp[2]
-      let resource = '/' // root resource
-      if (apiGatewayArnTmp[3]) {
-        resource += apiGatewayArnTmp[3]
-      }
+
       // for more information on specifics of generating policy, refer to blueprint for API Gateway's Custom authorizer in Lambda console
       let policy = new AuthPolicy(principalId, awsAccountId, apiOptions)
       policy.allowAllMethods()

@@ -6,17 +6,17 @@
 module.exports = function () {
   // status code or error are required
   if (!arguments.length) {
-    throw 'Invalid arguments supplied for response'
+    throw new Error('Invalid arguments supplied for response')
   }
 
   // default values
   let statusCode = null
   let headers = {
     // required for CORS using lambda-proxy
-    "Access-Control-Allow-Origin": "*",
+    'Access-Control-Allow-Origin': '*',
 
     // required for cookies, authorization headers with HTTPS
-    "Access-Control-Allow-Credentials": true
+    'Access-Control-Allow-Credentials': true
   }
 
   let body = {
@@ -28,7 +28,7 @@ module.exports = function () {
     switch (typeof (arg)) {
       case 'number':
         statusCode = arg
-        break;
+        break
       case 'object':
         if (arg instanceof Error) {
           statusCode = statusCode || 400
@@ -43,10 +43,12 @@ module.exports = function () {
           statusCode = statusCode || 200
           body.data = arg
         }
-        break;
+        break
     }
   }
 
   body = JSON.stringify(body)
+
+  /* global cb */
   return cb(null, { statusCode, body, headers })
 }

@@ -4,7 +4,6 @@ const _ = require('lodash')
 const yaml = require('js-yaml')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
-const path = require('path')
 const glob = require('glob')
 
 module.exports = class extends Generator {
@@ -22,7 +21,7 @@ module.exports = class extends Generator {
       })
 
       if (!files) {
-        this.log.error('serverless.yml NOT FOUND, for overwrite go inside a project.');
+        this.log.error('serverless.yml NOT FOUND, for overwrite go inside a project.')
       }
 
       return files ? files[0] : './'
@@ -110,7 +109,7 @@ module.exports = class extends Generator {
       // create function handler
       mkdirp(folders)
       this.fs.copyTpl(
-        this.templatePath('handler.js'),
+        this.templatePath('handler'),
         this.destinationPath(`${folders}/${filename}.js`),
         {
           lambda,

@@ -2,7 +2,7 @@ const __async__ = require('asyncawait/async')
 const __await__ = require('asyncawait/await')
 const optionsResolver = require('options-resolver')
 const response = require('./response')
-const resolver = optionsResolver();
+const resolver = optionsResolver()
 
 // apply validations using options resolver
 let validate = __async__((event) => {
