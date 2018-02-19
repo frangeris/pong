@@ -14,33 +14,21 @@ module.exports = function () {
   let headers = {
     // required for CORS using lambda-proxy
     'Access-Control-Allow-Origin': '*',
-
-    // required for cookies, authorization headers with HTTPS
-    'Access-Control-Allow-Credentials': true
-  }
-
-  let body = {
-    data: null
+    'Access-Control-Allow-Credentials': true,
+    'Content-Type': 'application/vnd.api+json'
   }
 
   // determinate the type of the args
+  let body = {}
   for (let arg of Array.from(arguments)) {
     switch (typeof (arg)) {
       case 'number':
         statusCode = arg
         break
       case 'object':
-        if (arg instanceof Error) {
-          statusCode = statusCode || 400
-          delete body.data
-          body.error = {
-            title: arg.message || 'Bad Request',
-            meta: {
-              // aws id request
-            }
-          }
+        if (statusCode === 400 || arg instanceof Error) {
+          body.errors = arg
         } else {
-          statusCode = statusCode || 200
           body.data = arg
         }
         break
