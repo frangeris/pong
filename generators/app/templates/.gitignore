@@ -9,4 +9,4 @@ jspm_packages
 .env.yml
 functions/example/
 jwks.pem
-**/event.json
+event.json

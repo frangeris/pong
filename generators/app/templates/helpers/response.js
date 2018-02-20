@@ -1,5 +1,5 @@
 /**
- * response() helper follow the specification "JSON API"
+ * This helper follow the specification "JSON API"
  * For more information, visit: http://jsonapi.org/format/
  */
 
@@ -22,6 +22,7 @@ module.exports = function () {
   let body = {
     data: null
   }
+
   for (let arg of Array.from(arguments)) {
     switch (typeof (arg)) {
       case 'number':
