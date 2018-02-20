@@ -9,8 +9,8 @@ module.exports = function () {
     throw new Error('Invalid arguments supplied for response')
   }
 
-  // default values
-  let statusCode = null
+  // default http code
+  let statusCode = 200
   let headers = {
     // required for CORS using lambda-proxy
     'Access-Control-Allow-Origin': '*',
