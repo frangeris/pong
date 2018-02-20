@@ -14,6 +14,15 @@ describe('response helper', () => {
     expect(result.statusCode).toBe(200)
   })
 
+  it('should return ok without http status', () => {
+    let result = response({})
+    expect(result).toHaveProperty('body')
+    expect(JSON.parse(result.body)).toHaveProperty('data')
+    expect(result).toHaveProperty('headers')
+    expect(result).toHaveProperty('statusCode')
+    expect(result.statusCode).toBe(200)
+  })
+
   it('should return not errors bad request', () => {
     let result = response(400)
     expect(result).toHaveProperty('body')
