@@ -19,15 +19,21 @@ module.exports = function () {
   }
 
   // determinate the type of the args
-  let body = {}
+  let body = {
+    data: null
+  }
   for (let arg of Array.from(arguments)) {
     switch (typeof (arg)) {
       case 'number':
         statusCode = arg
         break
       case 'object':
-        if (statusCode === 400 || arg instanceof Error) {
+        if (statusCode === 400) {
+          delete body.data
           body.errors = arg
+        } else if (arg instanceof Error) {
+          delete body.data
+          body.errors = [{ title: arg.message }]
         } else {
           body.data = arg
         }
