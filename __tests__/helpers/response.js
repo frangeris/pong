@@ -1,5 +1,5 @@
 'use strict'
-const response = require('../generators/app/templates/helpers/response')
+const response = require('../../generators/app/templates/helpers/response')
 
 // eslint-disable-next-line
 global.cb = (err, payload) => payload
