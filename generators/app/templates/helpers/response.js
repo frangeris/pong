@@ -10,7 +10,7 @@ module.exports = function () {
   }
 
   // default http code
-  let statusCode = 200
+  let statusCode = null
   let headers = {
     // required for CORS using lambda-proxy
     'Access-Control-Allow-Origin': '*',
@@ -31,11 +31,14 @@ module.exports = function () {
       case 'object':
         if (statusCode === 400) {
           delete body.data
+          statusCode = statusCode || 200
           body.errors = arg
         } else if (arg instanceof Error) {
           delete body.data
+          statusCode = statusCode || 400
           body.errors = [{ title: arg.message }]
         } else {
+          statusCode = statusCode || 200
           body.data = arg
         }
         break
