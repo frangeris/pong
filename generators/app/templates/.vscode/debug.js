@@ -14,7 +14,7 @@ try {
   let event = require('./event.json')
   event.body = JSON.stringify(event.body)
   handler.handler(event, context, (err, response) => {
-    console.dir(response.body)
+    console.log(response.body)
     process.exit()
   })
 } catch (err) {
