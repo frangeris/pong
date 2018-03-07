@@ -45,7 +45,7 @@ module.exports = function () {
     }
   }
 
-  body = JSON.stringify(body)
+  body = process.env.NODE_ENV === 'develop' ? body : JSON.stringify(body)
 
   /* global cb */
   return cb(null, { statusCode, body, headers })
