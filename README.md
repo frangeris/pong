@@ -47,53 +47,53 @@ Generate new functions inside a project using CLI (recomended for overwrite `ser
 
 ```bash
 $ yo pong:func
-? Resource name users
-? What kind of design? Normal "/users"
+? Path (can include parameters) /users/{uid}
 ? Which HTTP method? GET
-? Your function description Get users
-   create functions/users/get.js
-✔ GET /users for "get-users" function generated successfully
+? Your function description Get users by uid
+   create functions/users/id.js
+✔ GET /users/{uid} ► functions/users/id.handler (get-users-id)
 ```
 
-Functions also can be nested resources, running the same above inside the functions folder will create another folder in, eg: 
-create another resource inside `users` will end with `/users/{id}/<new resource>`
+Functions also can be nested resources, just specify the url and `pong` will create the files and nested folders.
 
 ```bash
 $ pwd
-/home/code/myproject/functions/users
+/home/code/myproject
 
-dev @ ~/code/myproject/functions/users
+dev @ ~/code/myproject
 $ yo pong:func
-? Resource name orgs
-? What kind of design? Normal "/orgs"
+? Path (can include parameters) /users/{uid}/orgs
 ? Which HTTP method? GET
-? Your function description Get orgs
-   create functions/orgs/get.js
-✔ GET /orgs for "get-orgs" function generated successfully
+? Your function description Get users orgs
+   create functions/users/orgs/get.js
+✔ GET /users/{uid}/orgs ► functions/users/orgs/get.handler (get-users-orgs)
 
 dev @ ~/code/myproject/functions/users
 $ ls
 total 16K
-drwxr-xr-x 3 dev 4,0K jun 27 10:41 .
-drwxr-xr-x 4 dev 4,0K jun 27 10:36 ..
--rw-r--r-- 1 dev  266 jun 27 10:36 get.js
-drwxr-xr-x 2 dev 4,0K jun 27 10:41 orgs/
+total 16K
+drwxr-xr-x 3 frang 4,0K feb 14 12:34 .
+drwxr-xr-x 5 frang 4,0K feb 14 12:32 ..
+-rw-r--r-- 1 frang  268 feb 14 12:32 id.js
+drwxr-xr-x 2 frang 4,0K feb 14 12:34 orgs <-------------- Nested folder was created
 ```
-> The `func` subgenerator will save the path with parameters (if have), to change parameters name update the file `serverless.yml` manually.
+> The `func` subgenerator will save the path with parameters (if have)
 
-## New updates from here?
+## New updates & new nice stuff here?
 Thank's to [Yeoman](http://yeoman.io) :raised_hands: we have a [conflict handler](http://yeoman.io/generator/Conflicter.html) out-of-the-box.
 
 > The Conflicter is a module that can be used to detect conflict between files. Each Generator file system helpers pass files through this module to make sure they don't break a user file.
 
-To update a project with the latest features in the boilerplate just run `yo pong:update` inside the project, the generator must detect and automatically inform that an update will be made, the generator will only update global files, if you have modifed "core" files be careful while overwriting in updates.
+To update a project with the latest features in the boilerplate just run `yo pong` inside the project, the generator must detect and automatically inform that an update will be made, the generator will only update global files, if you have modifed "core" files be careful while overwriting in updates.
 
 ```bash
 dev @ ~/code/my-api
-$ yo pong:update
+$ yo pong
 Project detected, updating the boilerplate files instead...
 ? Your project name (my-api)
 ```
+Resolve conflicts (in case that exists) and continue...
+
 *Note:* it will ask for some fields in case you want to update basic parameters in `serverless.yml`, in case nothing change, hit enter to use existing previous values.
 
 ## Now, let's Rock n' roll
@@ -104,19 +104,11 @@ If you wish to read more about this pattern and comparation with others, please 
 The basic project contains the following directory structure:
 ```
 .
-├── serverless.yml
-├── README.md
-├── LICENSE
-├── package.json
-├── .gitignore
-├── .env.yml.example
-├── templates
-│   ├── request.vtl
-|   └── response.vtl
-├── helpers
-│   ├── authpolicy.js
-│   ├── index.js
-│   └── response.js
+├── __tests__
+├── .vscode
+│   ├── debug.js                    # Debugger for vscode <3
+│   ├── event.json                  # Parameters for request when debugging
+│   └── launch.json
 ├── functions
 │   └── aws-authorizer-jwt          # AWS authorizer for jwt tokens
 │       └── handler.js
@@ -128,10 +120,23 @@ The basic project contains the following directory structure:
 │       ├── post.js
 │       ├── put.js
 │       └── delete.js
-└── tests
+├── helpers
+│   ├── authpolicy.js
+│   ├── index.js
+│   └── response.js
+├── templates
+│   ├── request.vtl
+|   └── response.vtl
 ├── tokens
 │   ├── aws.json                    # AWS jwks file
 │   └── firebase.json               # Firebase tokens
+├── .editorconfig
+├── .env.yml.example
+├── .gitignore
+├── LICENSE
+├── package.json
+├── README.md
+├── serverless.yml
 ```
 
 ## Concepts
@@ -224,9 +229,7 @@ And that's it, API Gateway will run the [authorizer before the lambda execution]
 
 Samples of the `response` **using lambda-proxy integration**, [more info of integrations](https://serverless.com/framework/docs/providers/aws/events/apigateway).
 ```javascript
-const {
-  response
-} = require('path/to/helpers')
+const { response } = require('path/to/helpers')
 
 response(201)
 // {"statusCode": 201, "body": "{\"data\":null}","headers": {}}
@@ -291,14 +294,9 @@ module.exports.handler = (event, context, callback) => {
 After adding the code bellow, just import the helper lib built-in and that's it... ^_^
 
 ```javascript
-const {
-  validate,
-  resolver,
-  response
-} = require('../../helpers')
+const { validate, resolver, response } = require('../../helpers')
 
 module.exports.handler = (event, context, callback) => {
-
     // needed for response scope
     global.cb = callback
 
@@ -313,10 +311,8 @@ module.exports.handler = (event, context, callback) => {
 
     // { email: 'tommy@powerrangers.com' }
     validate(event)
-        
         // all good!
         .then((body) => console.log('passed!'))
-        
         /*
             400 Bad Request
             {"message": "The required options \"password\" are missing"}

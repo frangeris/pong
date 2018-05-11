@@ -1,52 +1,52 @@
 /**
- * response() helper follow the specification "JSON API"
+ * This helper follow the specification "JSON API"
  * For more information, visit: http://jsonapi.org/format/
  */
 
 module.exports = function () {
   // status code or error are required
   if (!arguments.length) {
-    throw 'Invalid arguments supplied for response'
+    throw new Error('Invalid arguments supplied for response')
   }
 
-  // default values
+  // default http code
   let statusCode = null
   let headers = {
     // required for CORS using lambda-proxy
-    "Access-Control-Allow-Origin": "*",
-
-    // required for cookies, authorization headers with HTTPS
-    "Access-Control-Allow-Credentials": true
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true,
+    'Content-Type': 'application/vnd.api+json'
   }
 
+  // determinate the type of the args
   let body = {
     data: null
   }
 
-  // determinate the type of the args
   for (let arg of Array.from(arguments)) {
     switch (typeof (arg)) {
       case 'number':
         statusCode = arg
-        break;
+        break
       case 'object':
-        if (arg instanceof Error) {
-          statusCode = statusCode || 400
+        if (statusCode === 400) {
           delete body.data
-          body.error = {
-            title: arg.message || 'Bad Request',
-            meta: {
-              // aws id request
-            }
-          }
+          statusCode = statusCode || 200
+          body.errors = arg
+        } else if (arg instanceof Error) {
+          delete body.data
+          statusCode = statusCode || 400
+          body.errors = [{ title: arg.message }]
         } else {
           statusCode = statusCode || 200
           body.data = arg
         }
-        break;
+        break
     }
   }
 
-  body = JSON.stringify(body)
+  body = process.env.NODE_ENV === 'develop' ? body : JSON.stringify(body)
+
+  /* global cb */
   return cb(null, { statusCode, body, headers })
 }

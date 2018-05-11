@@ -4,14 +4,14 @@
   "description": "<%= name %> serverless api.",
   "private": true,
   "dependencies": {
-    "asyncawait": "^1.0.6",
-    "options-resolver": "^1.0.1",
+    "ajv": "^6.1.1",
+    "axios": "^0.16.2",
+    "js-yaml": "^3.10.0",
     "jsonwebtoken": "^7.4.1"
   },
   "devDependencies": {
     "serverless-aws-alias": "^0.5.1-alpha1",
     "jwk-to-pem": "^1.2.6",
-    "axios": "^0.16.2",
     "fs": "0.0.1-security"
   }
 }

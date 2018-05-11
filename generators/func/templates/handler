@@ -1,10 +1,8 @@
 'use strict'
-const {
-  response
-} = require('<%= path %>/helpers')
+const { response, validate } = require('<%= path %>helpers')
 
 module.exports.handler = (event, context, callback) => {
-  global.cb = callback <% if (method.match(/post|put/)) { %>
+  global.cb = callback <% if (method.match(/post|put|patch/)) { %>
   let body = JSON.parse(event.body)
   <% } %>
 

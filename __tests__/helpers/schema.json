@@ -1,0 +1,11 @@
+{
+  "title": "Schema",
+  "properties": {
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

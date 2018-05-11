@@ -1,26 +1,27 @@
-'use strict';
-const path = require('path');
-const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
+'use strict'
+const path = require('path')
+const assert = require('yeoman-assert')
+const helpers = require('yeoman-test')
 
-describe('serverless-boilerplate:app', () => {
+describe('pong:app', () => {
   beforeEach(() => {
-    return helpers.run(path.join(__dirname, '../generators/app'));
-  });
+    return helpers.run(path.join(__dirname, '../generators/app'))
+  })
 
-  // Validate structure
+  // validate structure
   it('generate base files', () => {
     assert.file([
+      '__tests__',
+      '.vscode',
       'functions',
       'helpers',
       'templates',
-      'tests',
       '.env.yml.example',
       '.gitignore',
       'LICENSE',
       'package.json',
       'README.md',
       'serverless.yml'
-    ]);
-  });
-});
+    ])
+  })
+})

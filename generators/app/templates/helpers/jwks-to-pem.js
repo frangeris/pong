@@ -2,8 +2,9 @@ const jwkToPem = require('jwk-to-pem')
 const fs = require('fs')
 const axios = require('axios')
 
-if (!process.argv.length)
-  throw 'URL for jwks required'
+if (!process.argv.length) {
+  throw new Error('URL for jwks required')
+}
 
 // get the jwks json file keys
 let url = process.argv[2]
