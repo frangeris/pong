@@ -31,6 +31,7 @@
     "yeoman-test": "1.6.0"
   },
   "dependencies": {
+    "yeoman-generator": "2.0.1",
     "chalk": "^2.3.0",
     "glob": "^7.1.2",
     "js-yaml": "^3.8.4",
