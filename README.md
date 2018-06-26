@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://rawgit.com/frangeris/pong/master/boilerplate-logo.svg" alt="Serverless RESTful Boilerplate" width="500" />
+  <img src="https://cdn.rawgit.com/frangeris/pong/f389d356/boilerplate-logo.svg" alt="Serverless RESTful Boilerplate" width="500" />
 </div>
 
 # Pong for RESTful APIs (serverless microservices pattern)
