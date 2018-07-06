@@ -1,8 +1,10 @@
-service: <%= name %>
+service:
+  name: <%= name %>
+  publish: false
 provider:
   name: aws
   region: <%= region %>
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   stage: develop
   environment: '${file(.env.yml):${self:custom.stage}}'
 custom:
