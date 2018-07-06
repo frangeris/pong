@@ -8,9 +8,8 @@ const glob = require('glob')
 
 module.exports = class extends Generator {
   initializing () {
-    // this.currentDir = path.basename(process.cwd());
     this.props = {}
-    this.byId = false
+    this.id = null
     this.resources = []
 
     // Find conf file
@@ -69,8 +68,8 @@ module.exports = class extends Generator {
           let by = ''
           this.resources = answers.path.split('/').filter(p => p !== '' && !p.match(/{|}/))
           if (answers.path.endsWith('}')) {
-            this.byId = true
-            by = ' by ' + answers.path.split(/[{}]/).filter(p => p !== '' && !p.includes('/')).pop()
+            this.id = answers.path.split(/[{}]/).filter(p => p !== '' && !p.includes('/')).pop()
+            by = ' by ' + this.id
           }
 
           return `${_.capitalize(answers.method)} ${this.resources.join(' ')}${by}`
@@ -88,10 +87,10 @@ module.exports = class extends Generator {
     let folders = this.props.path.match(/[\w]+(?![^{]*\})/g)
 
     // only when by resource
-    if (this.byId) {
-      filename = 'id'
+    if (this.id) {
+      filename = 'by'
       if (method === 'get') {
-        lambda += '-id'
+        lambda += `-${filename}`
       }
     }
 
