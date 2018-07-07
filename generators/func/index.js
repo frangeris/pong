@@ -86,12 +86,10 @@ module.exports = class extends Generator {
     let lambda = `${method}-${this.resources.join('-')}`
     let folders = this.props.path.match(/[\w]+(?![^{]*\})/g)
 
-    // only when by resource
-    if (this.id) {
+    // by only when GET and id
+    if (this.id && method === 'get') {
       filename = 'by'
-      if (method === 'get') {
-        lambda += `-${filename}`
-      }
+      lambda += `-${filename}`
     }
 
     // build the configuration file
