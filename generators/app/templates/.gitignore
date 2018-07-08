@@ -10,3 +10,5 @@ jspm_packages
 functions/example/
 jwks.pem
 event.json
+creds/
+!creds/.gitkeep
