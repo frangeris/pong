@@ -73,7 +73,47 @@ module.exports = class extends Generator {
       // create docs folder
       mkdirp(this.destinationPath('docs'))
       let response = await axios(request)
-      fs.writeFile(this.destinationPath('docs/swagger.json'), JSON.stringify(response.data), () => this.log.ok(`Swagger docs generated`))
+      let doc = response.data
+      doc.definitions = {}
+      for (let path in doc.paths) {
+        let methods = doc.paths[path]
+        for (let method in methods) {
+          let name = `${method}-${path.match(/(\w+)(?![^{]*\})/g).join('-')}`
+
+          // does it have schema?
+          if (fs.existsSync(`./schemas/${name}.json`)) {
+            let data = fs.readFileSync(`./schemas/${name}.json`, 'utf8')
+            let schema = JSON.parse(data)
+
+            // add schema to definitions
+            doc.definitions[name] = schema
+
+            // add parameters
+            doc.paths[path][method] = {
+              tags: [schema.title],
+              parameters: [
+                {
+                  // @TODO: query, path, cookie
+                  in: 'body',
+                  required: true,
+                  name: 'body',
+                  description: `${schema.title} object`,
+                  schema: {
+                    '$ref': `#/definitions/${name}`
+                  }
+                }
+              ],
+              responses: {
+                201: {
+                  description: 'Resource created'
+                }
+              }
+            }
+          }
+        }
+      }
+
+      fs.writeFile(this.destinationPath('docs/swagger.json'), JSON.stringify(doc), () => this.log.ok(`Swagger docs generated`))
     } catch (err) {
       this.log.error(err.message)
     }
