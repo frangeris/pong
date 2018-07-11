@@ -76,39 +76,120 @@ module.exports = class extends Generator {
       let doc = response.data
       doc.definitions = {}
       for (let path in doc.paths) {
-        let methods = doc.paths[path]
-        for (let method in methods) {
+        for (let method in doc.paths[path]) {
+          // remove options method
+          if (method === 'options') {
+            delete doc.paths[path].options
+            continue
+          }
+
+          let parameters = []
+          let responses = {}
+          let schema = {}
           let name = `${method}-${path.match(/(\w+)(?![^{]*\})/g).join('-')}`
 
+          // path patameters
+          let params = path.match(/{([^}]+)}/g)
+          if (params) {
+            for (let name of params) {
+              parameters.push(
+                {
+                  in: 'path',
+                  name: name.replace(/\{|\}/g, ''),
+                  required: true,
+                  type: 'string'
+                }
+              )
+            }
+          }
+
           // does it have schema?
-          if (fs.existsSync(`./schemas/${name}.json`)) {
+          let exists = fs.existsSync(`./schemas/${name}.json`)
+          if (exists) {
             let data = fs.readFileSync(`./schemas/${name}.json`, 'utf8')
-            let schema = JSON.parse(data)
+            schema = JSON.parse(data)
 
             // add schema to definitions
             doc.definitions[name] = schema
+          }
 
-            // add parameters
-            doc.paths[path][method] = {
-              tags: [schema.title],
-              parameters: [
-                {
-                  // @TODO: query, path, cookie
-                  in: 'body',
-                  required: true,
-                  name: 'body',
-                  description: `${schema.title} object`,
-                  schema: {
-                    '$ref': `#/definitions/${name}`
-                  }
-                }
-              ],
-              responses: {
-                201: {
-                  description: 'Resource created'
+          // parameters by method
+          let param = {}
+          switch (method.toUpperCase()) {
+            case 'PATCH':
+            case 'PUT':
+            case 'POST':
+              param = {
+                in: 'body',
+                required: true,
+                name: 'body',
+                description: `object`
+              }
+
+              if (exists) {
+                param.schema = {
+                  '$ref': `#/definitions/${name}`
                 }
               }
-            }
+              parameters.push(param)
+
+              responses = {
+                201: {
+                  description: 'Resource Created'
+                },
+                204: {
+                  description: 'No Content'
+                },
+                400: {
+                  description: 'Validation Error'
+                },
+                401: {
+                  description: 'Unauthorized'
+                },
+                502: {
+                  description: 'Internal Server Error'
+                }
+              }
+              break
+            case 'GET':
+              // iterate all parameters
+              if (exists) {
+                for (let query in schema.properties) {
+                  parameters.push(
+                    {
+                      in: 'query',
+                      name: query,
+                      required: schema.required.includes(query),
+                      type: 'string'
+                    }
+                  )
+                }
+              }
+
+              responses = {
+                200: {
+                  description: 'Ok'
+                },
+                204: {
+                  description: 'Ok, But No Content'
+                },
+                400: {
+                  description: 'Validation Error'
+                },
+                401: {
+                  description: 'Unauthorized'
+                },
+                502: {
+                  description: 'Internal Server Error'
+                }
+              }
+              break
+          }
+
+          doc.paths[path][method] = {
+            // tags: [schema.title],
+            parameters,
+            responses
           }
         }
       }
