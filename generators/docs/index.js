@@ -86,7 +86,8 @@ module.exports = class extends Generator {
           let parameters = []
           let responses = {}
           let schema = {}
-          let name = `${method}-${path.match(/(\w+)(?![^{]*\})/g).join('-')}`
+          let resources = path.match(/(\w+)(?![^{]*\})/g)
+          let name = `${method}-${resources.join('-')}`
 
           // path patameters
           let params = path.match(/{([^}]+)}/g)
@@ -151,6 +152,7 @@ module.exports = class extends Generator {
                 }
               }
               break
+            case 'DELETE':
             case 'GET':
               // iterate all parameters
               if (exists) {
@@ -186,8 +188,9 @@ module.exports = class extends Generator {
               break
           }
 
+          let tags = resources.length ? [resources[0]] : []
           doc.paths[path][method] = {
-            // tags: [schema.title],
+            tags,
             parameters,
             responses
           }
