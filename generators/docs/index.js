@@ -200,9 +200,15 @@ module.exports = class extends Generator {
           }
 
           // @HOTFIX: issue with [resources]-id
-          if (payload.functions[name]) {
+          const func = payload.functions[name]
+          if (func) {
+            // Add description as summary
+            if (func.description) {
+              doc.paths[path][method].summary = func.description
+            }
+
             // is it secured?
-            const events = payload.functions[name].events
+            const events = func.events
             let index = events.findIndex(event => event.http)
             if (events[index].authorizer) {
               doc.paths[path][method].security = [
