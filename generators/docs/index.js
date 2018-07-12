@@ -34,7 +34,7 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'id',
-        message: 'Rest api id',
+        message: 'AWS Api Gateway Api (id):',
         validate: value => {
           return !_.isEmpty(value)
         }
@@ -44,6 +44,7 @@ module.exports = class extends Generator {
   }
 
   async writing () {
+    // serverless.yml
     let payload = yaml.safeLoad(fs.readFileSync(this.serverless, 'utf8'))
 
     // get aws credentials
@@ -69,12 +70,24 @@ module.exports = class extends Generator {
       url: opts.path,
       headers: opts.headers
     }
+
     try {
       // create docs folder
       mkdirp(this.destinationPath('docs'))
       let response = await axios(request)
       let doc = response.data
       doc.definitions = {}
+
+      // jwt auth
+      doc.securityDefinitions = {
+        JWT: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'JWT Token'
+        }
+      }
+
+      // iterate over paths
       for (let path in doc.paths) {
         for (let method in doc.paths[path]) {
           // remove options method
@@ -84,13 +97,20 @@ module.exports = class extends Generator {
           }
 
           let parameters = []
-          let responses = {}
           let schema = {}
           let resources = path.match(/(\w+)(?![^{]*\})/g)
           let name = `${method}-${resources.join('-')}`
-
-          // path patameters
           let params = path.match(/{([^}]+)}/g)
+
+          // @TODO: resource by
+          // only serverless functions
+          /*
+          if (!payload.functions[name]) {
+            continue
+          }
+          */
+
+          // append path parameters
           if (params) {
             for (let name of params) {
               parameters.push(
@@ -133,27 +153,10 @@ module.exports = class extends Generator {
                 }
               }
               parameters.push(param)
-
-              responses = {
-                201: {
-                  description: 'Resource Created'
-                },
-                204: {
-                  description: 'No Content'
-                },
-                400: {
-                  description: 'Validation Error'
-                },
-                401: {
-                  description: 'Unauthorized'
-                },
-                502: {
-                  description: 'Internal Server Error'
-                }
-              }
               break
             case 'DELETE':
             case 'GET':
+              // @TODO: move to general, post can have query parameters
               // iterate all parameters
               if (exists) {
                 for (let query in schema.properties) {
@@ -167,24 +170,6 @@ module.exports = class extends Generator {
                   )
                 }
               }
-
-              responses = {
-                200: {
-                  description: 'Ok'
-                },
-                204: {
-                  description: 'Ok, But No Content'
-                },
-                400: {
-                  description: 'Validation Error'
-                },
-                401: {
-                  description: 'Unauthorized'
-                },
-                502: {
-                  description: 'Internal Server Error'
-                }
-              }
               break
           }
 
@@ -192,7 +177,38 @@ module.exports = class extends Generator {
           doc.paths[path][method] = {
             tags,
             parameters,
-            responses
+            responses: {
+              200: {
+                description: 'Ok'
+              },
+              204: {
+                description: 'Ok, But No Content'
+              },
+              400: {
+                description: 'Validation Error'
+              },
+              401: {
+                description: 'Unauthorized'
+              },
+              403: {
+                description: 'Missing Authentication Token'
+              },
+              502: {
+                description: 'Internal Server Error'
+              }
+            }
+          }
+
+          // @HOTFIX: issue with [resources]-id
+          if (payload.functions[name]) {
+            // is it secured?
+            const events = payload.functions[name].events
+            let index = events.findIndex(event => event.http)
+            if (events[index].authorizer) {
+              doc.paths[path][method].security = [
+                { JWT: [] }
+              ]
+            }
           }
         }
       }
