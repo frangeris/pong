@@ -49,6 +49,11 @@ module.exports = class extends Generator {
 
     // get aws credentials
     let config = new AWS.Config()
+    if (!config.credentials) {
+      this.log.error('Invalid AWS credentials, not found')
+      return
+    }
+
 
     // sign request
     let { accessKeyId, secretAccessKey } = config.credentials
