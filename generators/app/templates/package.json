@@ -4,7 +4,8 @@
   "description": "<%= name %> serverless api.",
   "private": true,
   "scripts": {
-    "deploy": "./node_modules/.bin/serverless deploy"
+    "deploy": "./node_modules/.bin/serverless deploy",
+    "logs": "./node_modules/.bin/serverless logs --tail -f"
   },
   "dependencies": {
     "ajv": "^6.1.1",
