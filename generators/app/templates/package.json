@@ -4,8 +4,14 @@
   "description": "<%= name %> serverless api.",
   "private": true,
   "scripts": {
-    "deploy": "./node_modules/.bin/serverless deploy",
-    "logs": "./node_modules/.bin/serverless logs --tail -f"
+    "test": "./node_modules/.bin/jest --env=node",
+    "clean:dev": "./node_modules/.bin/serverless remove --stage dev",
+    "deploy:dev": "./node_modules/.bin/serverless deploy --stage dev",
+    "logs:dev": "./node_modules/.bin/serverless logs --stage dev --tail -f",
+
+    "clean:prod": "./node_modules/.bin/serverless remove --stage prod",
+    "deploy:prod": "./node_modules/.bin/serverless deploy --stage prod",
+    "logs:prod": "./node_modules/.bin/serverless logs --stage dev --tail -f"
   },
   "dependencies": {
     "ajv": "^6.1.1",
@@ -14,9 +20,13 @@
     "jsonwebtoken": "^7.4.1"
   },
   "devDependencies": {
-    "serverless": "^1.27.2",
-    "serverless-aws-alias": "^0.5.1-alpha1",
+    "serverless": "^1.28.0",
     "jwk-to-pem": "^1.2.6",
-    "fs": "0.0.1-security"
+    "standard": "^10.0.3"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }
