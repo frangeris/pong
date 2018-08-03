@@ -29,14 +29,14 @@ module.exports = function () {
         statusCode = arg
         break
       case 'object':
-        if (statusCode === 400) {
-          delete body.data
-          statusCode = statusCode || 200
-          body.errors = arg
-        } else if (arg instanceof Error) {
+        if (arg instanceof Error) {
           delete body.data
           statusCode = statusCode || 400
           body.errors = [{ title: arg.message }]
+        } else if (statusCode === 400) {
+          delete body.data
+          statusCode = statusCode || 200
+          body.errors = arg
         } else {
           statusCode = statusCode || 200
           body.data = arg
