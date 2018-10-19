@@ -168,7 +168,7 @@ module.exports = class extends Generator {
                     {
                       in: 'query',
                       name: query,
-                      required: schema.required.includes(query),
+                      required: schema.required ? schema.required.includes(query) : false,
                       type: 'string'
                     }
                   )
