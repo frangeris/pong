@@ -3,9 +3,11 @@
   "version": "0.5.5",
   "description": "Pong for RESTful APIs (microservices pattern) using serverless ping-pong.",
   "license": "MIT",
-  "author": {
-    "name": "Frangeris Peguero",
-    "email": "frangeris.20@gmail.com"
+  "author": "Frangeris Peguero <frangeris.20@gmail.com>",
+  "scripts": {
+    "pretest": "./node_modules/.bin/standard --fix",
+    "test": "./node_modules/.bin/jest",
+    "prepublish": "npm run test"
   },
   "files": [
     "generators"
@@ -41,10 +43,6 @@
     "mkdirp": "^0.5.1",
     "yeoman-generator": "2.0.1",
     "yosay": "^2.0.0"
-  },
-  "scripts": {
-    "pretest": "./node_modules/.bin/standard --fix",
-    "test": "./node_modules/.bin/jest"
   },
   "standard": {
     "env": [
