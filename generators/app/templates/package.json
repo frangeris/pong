@@ -5,13 +5,16 @@
   "private": true,
   "scripts": {
     "test": "./node_modules/.bin/jest --env=node",
-    "clean:dev": "./node_modules/.bin/serverless remove --stage dev",
-    "deploy:dev": "./node_modules/.bin/serverless deploy --stage dev",
-    "logs:dev": "./node_modules/.bin/serverless logs --stage dev --tail -f",
-
-    "clean:prod": "./node_modules/.bin/serverless remove --stage prod",
+    "deploy:develop": "./node_modules/.bin/serverless deploy --stage develop",
+    "deploy:staging": "./node_modules/.bin/serverless deploy --stage staging",
     "deploy:prod": "./node_modules/.bin/serverless deploy --stage prod",
-    "logs:prod": "./node_modules/.bin/serverless logs --stage dev --tail -f"
+    "rollback": "./node_modules/.bin/serverless rollback --stage prod --aws-profile tam -t",
+    "logs:develop": "./node_modules/.bin/serverless logs --stage develop --tail -f",
+    "logs:staging": "./node_modules/.bin/serverless logs --stage staging --tail -f",
+    "logs:prod": "./node_modules/.bin/serverless logs --stage dev --tail -f",
+    "clean:develop": "./node_modules/.bin/serverless remove --stage develop",
+    "clean:staging": "./node_modules/.bin/serverless remove --stage staging",
+    "clean:prod": "./node_modules/.bin/serverless remove --stage prod"
   },
   "dependencies": {
     "ajv": "^6.1.1",
@@ -22,7 +25,8 @@
   "devDependencies": {
     "serverless": "^1.28.0",
     "jwk-to-pem": "^1.2.6",
-    "standard": "^10.0.3"
+    "standard": "^10.0.3",
+    "serverless-prune-plugin": "^1.3.1"
   },
   "standard": {
     "env": [
