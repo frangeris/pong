@@ -112,7 +112,7 @@ module.exports = class extends Generator {
       let serverless = yaml.safeLoad(fs.readFileSync(this.configFile, 'utf8'))
       let name = typeof serverless.service === 'object' ? serverless.service.name : serverless.service
       serverless.functions[lambda] = {
-        name: `${name}-${lambda}`,
+        name: `${name}-\${self:custom.stage}-${lambda}`,
         description: this.props.description,
         handler,
         events: [{
