@@ -9,6 +9,11 @@ provider:
   environment: '${file(.env.yml):${self:custom.stage}}'
 custom:
   stage: '${opt:stage, self:provider.stage}'
+  prune:
+    automatic: true
+    number: 3
+plugins:
+  - serverless-prune-plugin
 package:
   exclude:
     - .vscode/**
