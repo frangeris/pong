@@ -54,7 +54,6 @@ module.exports = class extends Generator {
       return
     }
 
-
     // sign request
     let { accessKeyId, secretAccessKey } = config.credentials
     let opts = {

@@ -8,10 +8,8 @@ describe('validate helper', () => {
     expect(check).toThrowError()
   })
 
-  it('should validate against schema', () => {
-    let check = validate({}, path.join(__dirname, 'schema.json'))
-    expect(check).toHaveProperty('valid')
-    expect(check).toHaveProperty('errors')
-    expect(check.valid).toBeFalsy()
+  it('should throws error validating schema', () => {
+    let check = () => validate({}, path.join(__dirname, 'schema.json'))
+    expect(check).toThrowError()
   })
 })
