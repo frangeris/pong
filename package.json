@@ -1,6 +1,6 @@
 {
   "name": "generator-pong",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Pong for RESTful APIs (microservices pattern) using serverless ping-pong.",
   "license": "MIT",
   "author": {
